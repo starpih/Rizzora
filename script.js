@@ -24,7 +24,10 @@ const videos = [
   "magnific_swaZj19l8e.mp4",
 ];
 
-const audioBase = "assets/audio/";
+const isGitHubPages = window.location.hostname.endsWith("github.io");
+const audioBase = isGitHubPages
+  ? "https://raw.githubusercontent.com/starpih/rizzora/main/assets/audio/"
+  : "assets/audio/";
 const voicePreviews = [
   "voice-preview-01.mp3",
   "voice-preview-02.mp3",
