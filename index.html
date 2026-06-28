@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rizzora Home</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <svg aria-hidden="true" class="svg-sprite">
+      <symbol id="icon-home" viewBox="0 0 24 24"><path d="M4.5 10.6 12 4.4l7.5 6.2v8.2c0 .7-.5 1.2-1.2 1.2h-4.1v-5.7H9.8V20H5.7c-.7 0-1.2-.5-1.2-1.2v-8.2Z" /></symbol>
+      <symbol id="icon-heart" viewBox="0 0 24 24"><path d="M20.4 7.8c0 4.8-8.4 10.4-8.4 10.4S3.6 12.6 3.6 7.8A4.1 4.1 0 0 1 11 5.4l1 1.2 1-1.2a4.1 4.1 0 0 1 7.4 2.4Z" /></symbol>
+      <symbol id="icon-magic" viewBox="0 0 24 24"><path d="m5 19 10-10m-2-4 6 6M5.6 6.5l.7-1.6.7 1.6 1.6.7-1.6.7-.7 1.6-.7-1.6L4 7.2l1.6-.7Zm12.8 9 .5-1.2.5 1.2 1.2.5-1.2.5-.5 1.2-.5-1.2-1.2-.5 1.2-.5Z" /></symbol>
+      <symbol id="icon-chat" viewBox="0 0 24 24"><path d="M5 18.6v.7l3.3-1.8h8.3a4.4 4.4 0 0 0 4.4-4.4V8.4A4.4 4.4 0 0 0 16.6 4H7.4A4.4 4.4 0 0 0 3 8.4v4.7a4.4 4.4 0 0 0 2 3.7v1.8Z" /></symbol>
+      <symbol id="icon-crown" viewBox="0 0 24 24"><path d="M4 18.8h16M5.2 16.5 4.4 7.2l4.5 3.7L12 5.2l3.1 5.7 4.5-3.7-.8 9.3H5.2Z" /></symbol>
+      <symbol id="icon-gift" viewBox="0 0 24 24"><path d="M4 10h16v10H4V10Zm8 0v10M3.5 7h17v3h-17V7Zm8.5 0C11.6 5.2 10.5 4 9.1 4 8 4 7.2 4.8 7.2 5.8 7.2 7 8.6 7 12 7Zm0 0c.4-1.8 1.5-3 2.9-3 1.1 0 1.9.8 1.9 1.8C16.8 7 15.4 7 12 7Z" /></symbol>
+      <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5v5l3.3 2" /></symbol>
+      <symbol id="icon-more" viewBox="0 0 24 24"><path d="M12 6.5h.01M12 12h.01M12 17.5h.01" /></symbol>
+      <symbol id="icon-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.2" /><path d="m15.4 15.4 4.1 4.1" /></symbol>
+      <symbol id="icon-play" viewBox="0 0 24 24"><path d="m9 7 8 5-8 5V7Z" /></symbol>
+    </svg>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Primary navigation">
+        <div class="brand">RIZZOARA</div>
+
+        <div class="sidebar-scroll">
+          <nav class="nav-list" aria-label="Main">
+            <a class="nav-item is-active" href="#"><svg class="icon"><use href="#icon-home" /></svg>Home</a>
+            <a class="nav-item" href="#"><svg class="icon"><use href="#icon-heart" /></svg>For You</a>
+            <a class="nav-item" href="#"><svg class="icon"><use href="#icon-magic" /></svg>My Wish</a>
+            <a class="nav-item" href="#"><svg class="icon"><use href="#icon-chat" /></svg>Message <span class="pill">23</span></a>
+          </nav>
+
+          <div class="chat-preview-list" aria-label="Recent chats"></div>
+        </div>
+
+        <div class="sidebar-footer">
+          <button class="premium-cta" type="button">
+            <svg class="icon premium-icon" aria-hidden="true"><use href="#icon-crown" /></svg>
+            <span>
+              <strong>Premium</strong>
+              <small>Endless Surprises</small>
+            </span>
+            <span class="discount">-50%</span>
+          </button>
+          <div class="socials" aria-label="Social links">
+            <span>ig</span>
+            <span>x</span>
+            <span>tt</span>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div class="offer-strip">
+            <span class="offer-label"><svg class="icon"><use href="#icon-gift" /></svg>Special Offer</span>
+            <span class="timer"><svg class="icon"><use href="#icon-clock" /></svg>23:21:43</span>
+            <span class="offer-copy">Get up to 70% OFF on Premium Subscription</span>
+            <button class="claim-button" type="button"><svg class="icon"><use href="#icon-crown" /></svg>Claim Offer</button>
+          </div>
+          <div class="account">
+            <img src="images/微信图片_20260605210259_381_1496.jpg" alt="" />
+            <span>
+              <strong>Mumu</strong>
+              <small>muxumei@gmail.com</small>
+            </span>
+            <button class="icon-button" type="button" aria-label="More options"><svg class="icon"><use href="#icon-more" /></svg></button>
+          </div>
+        </header>
+
+        <section class="content">
+          <h1>Suggest for <em>You</em></h1>
+
+          <section class="featured-grid" aria-label="Featured companions"></section>
+
+          <section class="create-banner" aria-label="Create your own AI boyfriend">
+            <div>
+              <h2>Create your own <em>AI Boyfriend</em></h2>
+              <button class="primary-button" type="button">Create</button>
+            </div>
+          </section>
+
+          <section class="discovery-controls" aria-label="Discovery filters">
+            <label class="search-box">
+              <svg class="icon" aria-hidden="true"><use href="#icon-search" /></svg>
+              <input type="search" placeholder="Search companions..." />
+            </label>
+            <div class="trait-list" aria-label="Traits"></div>
+          </section>
+
+          <section class="character-grid" aria-label="Companion cards"></section>
+
+          <section class="stories-section" aria-labelledby="stories-title">
+            <h2 id="stories-title">Stories from <em>us</em></h2>
+            <p>Real moments shared by women around the world - their journeys, their companionships, and the connections that matter.</p>
+            <div class="story-grid"></div>
+          </section>
+        </section>
+      </main>
+
+      <nav class="bottom-nav" aria-label="Mobile navigation">
+        <a class="is-active" href="#"><svg class="icon"><use href="#icon-home" /></svg>Home</a>
+        <a href="#"><svg class="icon"><use href="#icon-heart" /></svg>For You</a>
+        <a href="#"><svg class="icon"><use href="#icon-magic" /></svg>Wish</a>
+        <a href="#"><svg class="icon"><use href="#icon-chat" /></svg>Chat</a>
+      </nav>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
