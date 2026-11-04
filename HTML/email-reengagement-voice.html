@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rizzora — Voice chat re-engagement email</title>
+    <style>
+      :root {
+        --ink: #fff6ff;
+        --muted: #cfc4dd;
+        --quiet: #8c829f;
+        --bg: #141226;
+        --surface: #201d39;
+        --surface-soft: #2a2546;
+        --rose: #ec4caf;
+        --rose-soft: #ff4ab5;
+        --gold: #d8a73c;
+        --line: rgba(255, 255, 255, 0.08);
+        --border-rose: rgba(236, 76, 175, 0.62);
+        --shadow-card: 0 18px 40px rgba(0, 0, 0, 0.26);
+        --shadow-glow: 0 0 24px rgba(236, 76, 175, 0.42);
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        padding: 32px 16px;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .preview-label {
+        width: 620px;
+        max-width: 100%;
+        padding-bottom: 12px;
+        color: var(--quiet);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .email {
+        width: 620px;
+        max-width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        box-shadow: var(--shadow-card);
+      }
+
+      .inner { padding: 42px 48px 34px; }
+
+      .brand {
+        color: var(--rose-soft);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 25px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      .eyebrow {
+        padding-top: 54px;
+        padding-bottom: 13px;
+        color: var(--gold);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        max-width: 450px;
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(34px, 7vw, 49px);
+        font-weight: 400;
+        letter-spacing: -0.04em;
+        line-height: 1.03;
+      }
+
+      h1 em { color: var(--rose-soft); font-style: normal; }
+
+      .lead {
+        max-width: 430px;
+        padding-top: 20px;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.65;
+      }
+
+      .announcement {
+        max-width: 470px;
+        padding: 15px 17px;
+        color: var(--muted);
+        background: var(--surface);
+        border-left: 2px solid var(--gold);
+        font-size: 13px;
+        line-height: 1.65;
+      }
+
+      .announcement strong { color: var(--ink); font-weight: 700; }
+
+      .voice-cta {
+        width: 286px;
+        border-collapse: separate;
+        border-spacing: 0;
+        background: linear-gradient(135deg, var(--rose-soft) 0%, var(--rose) 100%);
+        border-radius: 999px;
+        box-shadow: var(--shadow-glow);
+      }
+
+      .voice-cta-cell {
+        padding: 0;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--rose-soft) 0%, var(--rose) 100%);
+      }
+
+      .voice-cta-link {
+        display: block;
+        padding: 13px 22px;
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 800;
+        text-align: center;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      .voice-icon {
+        display: inline-block;
+        vertical-align: middle;
+        width: 20px;
+        height: 20px;
+        margin-right: 9px;
+      }
+
+      .voice-icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
+
+      .voice-copy { display: inline-block; vertical-align: middle; }
+      .voice-copy strong { font-size: 13px; font-weight: 800; white-space: nowrap; }
+
+      .voice-arrow {
+        display: inline-block;
+        margin-left: 9px;
+        color: currentColor;
+        font-size: 18px;
+        line-height: 1;
+        vertical-align: middle;
+      }
+
+      .divider-cell {
+        height: 1px;
+        padding-top: 32px;
+        border-top: 1px solid var(--line);
+        font-size: 0;
+        line-height: 0;
+      }
+
+      .footer {
+        padding-top: 21px;
+        color: var(--quiet);
+        font-size: 11px;
+        line-height: 1.7;
+      }
+
+      .footer a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+
+      @media (max-width: 520px) {
+        .page-cell { padding: 14px 10px !important; }
+        .email { border-radius: 18px; }
+        .inner { padding: 30px 24px 26px; }
+        .eyebrow { padding-top: 44px; }
+        .voice-cta { width: 286px; }
+      }
+    </style>
+  </head>
+  <body>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td class="page-cell" align="center" style="padding:32px 16px;">
+          <table role="presentation" width="620" cellpadding="0" cellspacing="0" border="0" style="width:620px;max-width:100%;">
+            <tr><td class="preview-label">Rizzora / re-engagement email concept</td></tr>
+          </table>
+
+          <table role="presentation" width="620" cellpadding="0" cellspacing="0" border="0" class="email" aria-label="Rizzora voice chat re-engagement email">
+            <tr>
+              <td class="inner">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr><td class="brand">Rizzora</td></tr>
+                  <tr><td class="eyebrow">A little closer, this time</td></tr>
+                  <tr><td><h1>I’d love to <em>hear from you</em> again.</h1></td></tr>
+                  <tr><td class="lead">I’m here whenever you feel like talking. And now, you can hear my voice too — warm, natural, and just a little closer.</td></tr>
+                  <tr><td style="height:24px;line-height:24px;font-size:0;">&nbsp;</td></tr>
+                  <tr><td class="announcement"><strong>Voice chat is now live on Rizzora.</strong> We’re excited to give you a more natural way to connect — speak with your favorite companion and feel a little closer, one conversation at a time.</td></tr>
+                  <tr>
+                    <td align="center" style="padding:32px 0 28px;">
+                      <table role="presentation" width="286" cellpadding="0" cellspacing="0" border="0" class="voice-cta" style="width:286px;">
+                        <tr>
+                          <td align="center" class="voice-cta-cell">
+                            <a class="voice-cta-link" href="{{voice_chat_url}}" aria-label="Try Voice Chat Now">
+                              <span class="voice-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 10v4M8.5 7v10M12 4.5v15M15.5 7v10M19 10v4"></path></svg></span><span class="voice-copy"><strong>Try Voice Chat Now</strong></span><span class="voice-arrow" aria-hidden="true">→</span>
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr><td class="divider-cell"></td></tr>
+                  <tr><td class="footer">You’re receiving this because you’ve chatted with Rizzora before.<br /><a href="{{preferences_url}}">Manage preferences</a> &nbsp;·&nbsp; <a href="{{unsubscribe_url}}">Unsubscribe</a></td></tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

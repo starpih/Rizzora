@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VIP Membership Plan | Rizzora</title>
+  <link rel="stylesheet" href="styles.css" /><link rel="stylesheet" href="account.css" />
+</head>
+<body class="account-page">
+  <div class="account-layout">
+    <aside class="account-nav" aria-label="Primary navigation"><a class="account-brand" href="index.html">RIZZORA</a><nav><a href="index.html">Home</a><a href="chat.html">Messages</a><a class="is-current" href="user-center.html">Account</a></nav></aside>
+    <main class="account-content">
+      <header class="account-heading"><div><a class="account-back" href="user-center.html">← User Center</a><h1>VIP Membership Plan</h1></div></header>
+      <div class="account-center vip-content">
+        <p class="account-note">Plan prices and benefits are examples for preview only.</p>
+        <fieldset class="vip-plans"><legend>Choose a billing period</legend>
+          <label class="vip-plan"><input type="radio" name="vip-plan" value="monthly" /><span>Monthly</span><strong>$9.95</strong><small>First period</small></label>
+          <label class="vip-plan"><input type="radio" name="vip-plan" value="quarterly" checked /><span>Quarterly</span><strong>$24.95</strong><small>First period</small></label>
+          <label class="vip-plan"><input type="radio" name="vip-plan" value="yearly" /><span>Yearly</span><strong>$89.95</strong><small>First period</small></label>
+        </fieldset>
+        <ul class="vip-benefits"><li>6,000 Monthly Stamina in this example</li><li>Stamina is shared across companions</li><li>Membership and renewal terms will be confirmed before purchase</li></ul>
+        <button class="reference-gold-action vip-submit" type="button">Preview Premium</button>
+        <p class="account-note">No payment or real subscription will be created.</p>
+        <p class="vip-result" role="status" hidden>Premium preview enabled. <a href="user-center.html">Return to User Center</a></p>
+      </div>
+    </main>
+  </div>
+  <script src="vip.js"></script>
+</body>
+</html>

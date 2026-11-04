@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Account | Rizzora</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="account.css" />
+</head>
+<body class="account-page">
+  <div class="account-layout">
+    <aside class="account-nav" aria-label="Primary navigation">
+      <a class="account-brand" href="index.html">RIZZORA</a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="chat.html">Messages</a>
+        <a class="is-current" href="user-center.html" aria-current="page">Account</a>
+      </nav>
+    </aside>
+    <main class="account-content">
+      <header class="account-heading">
+        <div><a class="account-back" href="index.html">← Back to home</a><h1>User Center</h1></div>
+      </header>
+      <div class="account-center">
+          <button class="account-section account-profile account-profile-button" type="button" aria-expanded="false" aria-controls="state-menu">
+            <img src="images/微信图片_20260605210259_381_1496.jpg" alt="" />
+            <div><h2>Mumu</h2><span class="account-plan-badge" data-account-plan>Free Account</span></div>
+          </button>
+          <div class="state-menu" id="state-menu" hidden>
+            <p>Preview account state</p>
+            <button type="button" data-state="day1">Free Account</button>
+            <button type="button" data-state="extra">Free Account + Stamina Pack</button>
+            <button type="button" data-state="vip">Premium</button>
+            <button type="button" data-state="vip_extra">Premium + Stamina Pack</button>
+          </div>
+          <section class="account-section" id="membership">
+            <div data-membership-copy></div>
+            <p class="account-note">Stamina is shared across companions. Balances shown are examples.</p>
+          </section>
+          <button class="account-wide-action" type="button" disabled>Install APP <span>Coming soon</span></button>
+          <button class="account-wide-action" type="button" disabled>Log out <span>Demo</span></button>
+      </div>
+    </main>
+  </div>
+  <script src="account.js"></script>
+</body>
+</html>
