@@ -88,14 +88,14 @@ const chatMessages = [
 ];
 
 const profileAttributes = [
-  { label: "Birthday", value: "2000-10-06", icon: "calendar" },
-  { label: "Height", value: "188cm", icon: "ruler" },
+  { label: "Birthday", value: "2004-01-19", icon: "calendar" },
+  { label: "Height", value: "187cm", icon: "ruler" },
   { label: "Zodiac Signs", value: "Capricorn", icon: "star" },
-  { label: "MBTI", value: "INFI", icon: "sparkle" },
-  { label: "Nationality", value: "Germany", icon: "globe" },
-  { label: "Occupation", value: "Musician", icon: "briefcase" },
-  { label: "Hobbies", value: "Photography · Reading · Piano", icon: "heart", wide: true },
-  { label: "Personality", values: ["Art & Architecture", "Music", "Night walks", "Philosophy"], icon: "user", wide: true, tags: true },
+  { label: "MBTI", value: "ENFJ", icon: "sparkle" },
+  { label: "Nationality", value: "Italian-American", icon: "globe" },
+  { label: "Occupation", value: "AI Founder", icon: "briefcase" },
+  { label: "Hobbies", value: "Fitness · Travel · Photography · Night drives · Sunsets", icon: "heart", wide: true },
+  { label: "Personality", values: ["Warm", "Romantic", "Playful", "Attentive", "Charismatic", "Seductive"], icon: "user", wide: true, tags: true },
 ];
 
 const diaryItems = [

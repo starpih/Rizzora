@@ -47,7 +47,17 @@
   }
 
   function render() {
-    const state = states[selected];
+    const state = { ...states[selected] };
+    let capacity = 150;
+    if (state.extra > 0) {
+      try {
+        const saved = JSON.parse(localStorage.getItem("rizzora-web-extra-demo") || "null");
+        if (Number.isFinite(saved?.balance) && Number.isFinite(saved?.capacity) && saved.balance >= 0 && saved.capacity > 0) {
+          state.extra = saved.balance;
+          capacity = saved.capacity;
+        }
+      } catch (_) {}
+    }
     let billing = "quarterly";
     try { billing = localStorage.getItem("rizzora-web-billing-demo") || billing; } catch (_) {}
     const billingLabel = { monthly: "Monthly", quarterly: "Quarterly", yearly: "Yearly" }[billing] || "Quarterly";
@@ -62,7 +72,7 @@
     const membership = document.querySelector("[data-membership-copy]");
     if (membership) {
       const isVip = state.plan === "Premium";
-      const pack = state.extra > 0 ? `<div class="stamina-line"><div><span>Stamina Pack</span><strong>⚡ ${state.extra}/150</strong></div><div class="stamina-track"><span style="width: ${state.extra / 150 * 100}%"></span></div><small>Expiry terms to be confirmed</small></div>` : "";
+      const pack = state.extra > 0 ? `<div class="stamina-line"><div><span>Stamina Pack</span><strong>⚡ ${state.extra.toLocaleString()}/${capacity.toLocaleString()}</strong></div><div class="stamina-track"><span style="width: ${Math.min(100, state.extra / capacity * 100)}%"></span></div><small>Expiry terms to be confirmed</small></div>` : "";
       const monthly = isVip ? `<div class="stamina-line"><div><span>Monthly Stamina</span><strong>⚡ ${state.monthly}/6000</strong></div><div class="stamina-track is-gold"><span style="width: ${state.monthly / 6000 * 100}%"></span></div><small>Reset date shown in your plan</small></div>` : "";
       membership.innerHTML = `<div class="reference-membership-head"><span>Membership</span>${isVip ? `<div><strong>VIP plan</strong> <small>${billingLabel} Billing</small></div>` : '<b>Free Plan</b>'}</div>${pack || monthly ? `<div class="stamina-panel">${pack}${monthly}</div>` : ""}<a class="reference-gold-action" href="vip.html">${isVip ? 'View Plan' : 'Become VIP, get 6000 st/month'}</a><a class="reference-supplement" href="stamina-supplement.html"><img src="images/gifts/coffee-soft.png" alt="" /> Stamina Supplement</a>${pack || isVip ? '<a class="reference-record" href="purchase-records.html#records">Purchase Record ›</a>' : ''}`;
     }
@@ -91,6 +101,7 @@
     profile.setAttribute("aria-expanded", String(!stateMenu.hidden));
   });
   stateMenu?.querySelectorAll("[data-state]").forEach((button) => button.addEventListener("click", () => {
+    try { localStorage.removeItem("rizzora-web-extra-demo"); } catch (_) {}
     setState(button.dataset.state);
     stateMenu.hidden = true;
     profile.setAttribute("aria-expanded", "false");
