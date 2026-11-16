@@ -1,9 +1,7 @@
 (() => {
   const key = "rizzora-web-account-demo";
-  const states = {
+  const states = window.RizzoraData?.accountStates || {
     day1: { plan: "Free Account", free: "10 of 10 messages", detail: "Day 1 of 3", monthly: null, extra: 0 },
-    day2: { plan: "Free Account", free: "10 of 10 messages", detail: "Day 2 of 3", monthly: null, extra: 0 },
-    day3: { plan: "Free Account", free: "10 of 10 messages", detail: "Day 3 of 3", monthly: null, extra: 0 },
     day4: { plan: "Free Account", free: "No free messages left", detail: "Free period ended", monthly: null, extra: 0 },
     extra: { plan: "Free Account", free: "Free period ended", detail: "Extra Stamina available", monthly: null, extra: 60 },
     vip: { plan: "Premium", free: "Free period ended", detail: "Premium account", monthly: 4532, extra: 0 },
@@ -58,10 +56,15 @@
         }
       } catch (_) {}
     }
+    if (selected === "day1" || selected === "day2" || selected === "day3") {
+      let used = 0;
+      try { used = JSON.parse(localStorage.getItem("rizzora-portal-usage") || "{}").freeUsed || 0; } catch (_) {}
+      state.free = `${Math.max(0, 10 - used)} of 10 messages`;
+    }
     let billing = "quarterly";
     try { billing = localStorage.getItem("rizzora-web-billing-demo") || billing; } catch (_) {}
     const billingLabel = { monthly: "Monthly", quarterly: "Quarterly", yearly: "Yearly" }[billing] || "Quarterly";
-    if (menu) menu.innerHTML = `<div class="account-popover-head"><strong>Mumu</strong><span>${state.plan} · Demo</span></div>${balanceMarkup(state)}<a href="user-center.html">Account &amp; Stamina →</a>`;
+    if (menu) menu.innerHTML = `<div class="account-popover-head"><strong>Mumu</strong><span>${state.plan} · Sample</span></div>${balanceMarkup(state)}<a href="user-center.html">My Account &amp; Stamina →</a>`;
     const plan = document.querySelector("[data-account-plan]");
     if (plan) {
       plan.textContent = state.plan;
@@ -74,12 +77,12 @@
       const isVip = state.plan === "Premium";
       const pack = state.extra > 0 ? `<div class="stamina-line"><div><span>Stamina Pack</span><strong>⚡ ${state.extra.toLocaleString()}/${capacity.toLocaleString()}</strong></div><div class="stamina-track"><span style="width: ${Math.min(100, state.extra / capacity * 100)}%"></span></div><small>Expiry terms to be confirmed</small></div>` : "";
       const monthly = isVip ? `<div class="stamina-line"><div><span>Monthly Stamina</span><strong>⚡ ${state.monthly}/6000</strong></div><div class="stamina-track is-gold"><span style="width: ${state.monthly / 6000 * 100}%"></span></div><small>Reset date shown in your plan</small></div>` : "";
-      membership.innerHTML = `<div class="reference-membership-head"><span>Membership</span>${isVip ? `<div><strong>VIP plan</strong> <small>${billingLabel} Billing</small></div>` : '<b>Free Plan</b>'}</div>${pack || monthly ? `<div class="stamina-panel">${pack}${monthly}</div>` : ""}<a class="reference-gold-action" href="vip.html">${isVip ? 'View Plan' : 'Become VIP, get 6000 st/month'}</a><a class="reference-supplement" href="stamina-supplement.html"><img src="images/gifts/coffee-soft.png" alt="" /> Stamina Supplement</a>${pack || isVip ? '<a class="reference-record" href="purchase-records.html#records">Purchase Record ›</a>' : ''}`;
+      membership.innerHTML = `<div class="reference-membership-head"><span>Membership</span>${isVip ? `<div><strong>VIP plan</strong> <small>${billingLabel} Billing</small></div>` : '<b>Free Plan</b>'}</div>${pack || monthly ? `<div class="stamina-panel">${pack}${monthly}</div>` : ""}<a class="reference-gold-action" href="vip.html">${isVip ? "View sample plan" : "Preview VIP · sample 6,000 Stamina / month"}</a><a class="reference-supplement" href="stamina-supplement.html"><img src="images/gifts/coffee-soft.png" alt="" /> Stamina Supplement</a>${pack || isVip ? '<a class="reference-record" href="purchase-records.html#records">Purchase Record ›</a>' : ''}`;
     }
     const select = document.querySelector("#account-demo-state");
     if (select) select.value = selected;
     const chatStatus = document.querySelector(".chat-stamina-status");
-    if (chatStatus) chatStatus.textContent = selected.startsWith("day") && selected !== "day4" ? `${state.free} · ${state.detail}` : `Stamina: ${((state.monthly || 0) + state.extra).toLocaleString()} · shared across companions`;
+    if (chatStatus) chatStatus.textContent = selected.startsWith("day") && selected !== "day4" ? `Sample · ${state.free} · ${state.detail}` : `Sample Stamina · ${((state.monthly || 0) + state.extra).toLocaleString()} · shared across companions`;
   }
 
   const select = document.querySelector("#account-demo-state");
@@ -101,7 +104,10 @@
     profile.setAttribute("aria-expanded", String(!stateMenu.hidden));
   });
   stateMenu?.querySelectorAll("[data-state]").forEach((button) => button.addEventListener("click", () => {
-    try { localStorage.removeItem("rizzora-web-extra-demo"); } catch (_) {}
+    try {
+      localStorage.removeItem("rizzora-web-extra-demo");
+      localStorage.removeItem("rizzora-portal-usage");
+    } catch (_) {}
     setState(button.dataset.state);
     stateMenu.hidden = true;
     profile.setAttribute("aria-expanded", "false");
@@ -114,5 +120,7 @@
     status.href = "user-center.html";
     composer.prepend(status);
   }
+  document.addEventListener("rizzora-demo-refresh", render);
+  window.RizzoraAccount = { render };
   render();
 })();

@@ -39,7 +39,7 @@
       return;
     }
     checkout.disabled = true;
-    result.innerHTML = `${pack.total.toLocaleString()} Stamina added to the preview. No payment was made. <a href="user-center.html">Back to User Center</a>`;
+    result.innerHTML = `Sample balance updated with ${pack.total.toLocaleString()} Stamina in this browser. No payment was made. <a href="user-center.html">Back to My Account</a>`;
     result.hidden = false;
   });
   render();

@@ -1,13 +1,16 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23ec4caf'/%3E%3C/svg%3E" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Rizzora Chat</title>
     <link rel="stylesheet" href="styles.css?v=chat-premium-card-20260710" />
     <link rel="stylesheet" href="account.css" />
+    <link rel="stylesheet" href="portal.css" />
   </head>
-  <body class="chat-page">
+  <body class="chat-page" data-portal-page="chats">
+    <a class="skip-link" href="#content">Skip to content</a>
     <svg aria-hidden="true" class="svg-sprite">
       <symbol id="icon-home" viewBox="0 0 24 24"><path d="M4.5 10.6 12 4.4l7.5 6.2v8.2c0 .7-.5 1.2-1.2 1.2h-4.1v-5.7H9.8V20H5.7c-.7 0-1.2-.5-1.2-1.2v-8.2Z" /></symbol>
       <symbol id="icon-heart" viewBox="0 0 24 24"><path d="M20.4 7.8c0 4.8-8.4 10.4-8.4 10.4S3.6 12.6 3.6 7.8A4.1 4.1 0 0 1 11 5.4l1 1.2 1-1.2a4.1 4.1 0 0 1 7.4 2.4Z" /></symbol>
@@ -49,9 +52,9 @@
         <div class="sidebar-scroll">
           <nav class="nav-list" aria-label="Main">
             <a class="nav-item" href="index.html"><svg class="icon"><use href="#icon-home" /></svg>Home</a>
-            <a class="nav-item" href="#"><svg class="icon"><use href="#icon-heart" /></svg>For You</a>
-            <a class="nav-item" href="#"><img class="nav-icon-img" src="images/ICON/creation_icon.svg" alt="" />My Wish</a>
-            <a class="nav-item is-active" href="chat.html"><svg class="icon"><use href="#icon-chat" /></svg>Message <span class="pill">23</span></a>
+            <a class="nav-item" href="explore.html"><svg class="icon"><use href="#icon-heart" /></svg>Explore</a>
+            <a class="nav-item is-active" href="chat.html" aria-current="page"><svg class="icon"><use href="#icon-chat" /></svg>Chats <span class="pill" data-unread-pill hidden>0</span></a>
+            <a class="nav-item" href="user-center.html"><img class="nav-icon-img" src="images/ICON/Profile.svg" alt="" />My Account</a>
           </nav>
           <div class="chat-preview-list" aria-label="Recent chats"></div>
         </div>
@@ -60,9 +63,9 @@
             <img class="premium-icon" src="images/ICON/Crown.svg" alt="" />
             <span>
               <strong>Premium</strong>
-              <small>Endless Surprises</small>
+              <small>Sample plans</small>
             </span>
-            <span class="discount">-50%</span>
+            <span class="discount">Sample</span>
           </button>
           <div class="socials" aria-label="Social links">
             <img src="images/ICON/Social_Icons_ins.svg" alt="Instagram" />
@@ -72,19 +75,18 @@
         </div>
       </aside>
 
-      <main class="main chat-main">
+      <main class="main chat-main" id="content">
         <header class="topbar">
           <div class="offer-strip">
-            <span class="offer-label"><svg class="icon"><use href="#icon-gift" /></svg>Special Offer</span>
-            <span class="timer"><svg class="icon"><use href="#icon-clock" /></svg>23:21:43</span>
-            <span class="offer-copy">Get up to 70% OFF on Premium Subscription</span>
-            <button class="claim-button" type="button"><img class="claim-icon" src="images/ICON/Crown.svg" alt="" />Claim Offer</button>
+            <span class="offer-label"><svg class="icon"><use href="#icon-gift" /></svg>Sample</span>
+            <span class="offer-copy">Membership and Stamina previews use example balances</span>
+            <button class="claim-button" type="button"><img class="claim-icon" src="images/ICON/Crown.svg" alt="" />View sample plans</button>
           </div>
           <div class="account">
             <img src="images/微信图片_20260605210259_381_1496.jpg" alt="" />
             <span>
               <strong>Mumu</strong>
-              <small>muxumei@gmail.com</small>
+              <small>Sample profile</small>
             </span>
             <button class="icon-button account-toggle" type="button" aria-label="Account menu" aria-expanded="false"><svg class="icon"><use href="#icon-more" /></svg></button>
           </div>
@@ -101,14 +103,14 @@
             </h1>
             <label class="chat-search">
               <svg class="icon" aria-hidden="true"><use href="#icon-search" /></svg>
-              <input type="search" placeholder="Search companions..." />
+              <input id="chat-search" type="search" placeholder="Search chats..." aria-label="Search chats" />
             </label>
             <div class="conversation-list" aria-label="Conversation list"></div>
             <button class="chat-premium-card" type="button">
               <span class="premium-mark" aria-hidden="true"><img class="premium-mark-icon" src="images/ICON/Crown.svg" alt="" /></span>
               <span>
-                <strong>Premium Access</strong>
-                <small>Unlock all companions</small>
+                <strong>Sample membership</strong>
+                <small>Preview VIP and Stamina</small>
               </span>
             </button>
           </section>
@@ -125,7 +127,7 @@
                 </span>
               </div>
               <div class="chat-header-actions">
-                <button class="icon-button" type="button" aria-label="More options"><svg class="icon"><use href="#icon-more" /></svg></button>
+                <button class="icon-button" type="button" data-chat-more aria-label="Conversation options" aria-haspopup="dialog"><svg class="icon"><use href="#icon-more" /></svg></button>
               </div>
             </header>
 
@@ -134,17 +136,17 @@
             <form class="message-composer">
               <div class="composer-input">
                 <div class="composer-tools" aria-label="Composer tools">
-                  <button type="button" aria-label="Add image"><svg class="icon"><use href="#icon-image" /></svg></button>
-                  <button type="button" aria-label="Open gallery"><svg class="icon"><use href="#icon-grid" /></svg></button>
-                  <button type="button" aria-label="Record voice"><svg class="icon"><use href="#icon-mic" /></svg></button>
+                  <button type="button" data-future="images" aria-label="Images are on the roadmap"><svg class="icon"><use href="#icon-image" /></svg></button>
+                  <button type="button" data-future="gallery" aria-label="Gallery is on the roadmap"><svg class="icon"><use href="#icon-grid" /></svg></button>
+                  <button type="button" data-future="voice" aria-label="Live voice notes are on the roadmap"><svg class="icon"><use href="#icon-mic" /></svg></button>
                 </div>
-                <input type="text" placeholder="Message Chris..." aria-label="Message Chris" />
+                <input id="chat-input" type="text" placeholder="Message Chris..." aria-label="Message Chris" />
                 <div class="composer-actions">
-                  <button type="button" aria-label="Add emoji"><svg class="icon"><use href="#icon-smile" /></svg></button>
+                  <button type="button" data-emoji aria-label="Insert a sample emoji" aria-haspopup="menu"><svg class="icon"><use href="#icon-smile" /></svg></button>
                   <button class="send-button" type="submit" aria-label="Send message"><svg class="icon"><use href="#icon-send" /></svg></button>
                 </div>
               </div>
-              <p class="composer-hint">Share images, voice notes, or create a special moment</p>
+              <p class="composer-hint">Text replies are simulated. Image sharing and live voice are on the roadmap.</p>
             </form>
           </section>
 
@@ -181,9 +183,9 @@
                 <div class="timeline-list"></div>
               </section>
               <div class="profile-action-bar">
-                <button type="button"><svg class="icon"><use href="#icon-chat" /></svg>New Chat</button>
-                <button type="button"><svg class="icon"><use href="#icon-pin" /></svg>Pinned / History</button>
-                <button type="button"><svg class="icon"><use href="#icon-mic" /></svg>Voice</button>
+                <button type="button" data-profile-action="new"><svg class="icon"><use href="#icon-chat" /></svg>New Chat</button>
+                <button type="button" data-profile-action="pins"><svg class="icon"><use href="#icon-pin" /></svg>Pinned</button>
+                <button type="button" data-profile-action="voice"><svg class="icon"><use href="#icon-mic" /></svg>Voice sample</button>
               </div>
             </div>
           </aside>
@@ -192,10 +194,9 @@
 
       <nav class="bottom-nav" aria-label="Mobile navigation">
         <a href="index.html"><svg class="icon"><use href="#icon-home" /></svg>Home</a>
-        <a href="#"><svg class="icon"><use href="#icon-heart" /></svg>For You</a>
-        <a href="#"><svg class="icon"><use href="#icon-magic" /></svg>Wish</a>
-        <a class="is-active" href="chat.html"><svg class="icon"><use href="#icon-chat" /></svg>Chat</a>
-        <a href="user-center.html" aria-label="User center"><img class="nav-icon-img" src="images/ICON/Profile.svg" alt="" />Account</a>
+        <a href="explore.html"><svg class="icon"><use href="#icon-heart" /></svg>Explore</a>
+        <a class="is-active" href="chat.html" aria-current="page"><svg class="icon"><use href="#icon-chat" /></svg>Chats</a>
+        <a href="user-center.html"><img class="nav-icon-img" src="images/ICON/Profile.svg" alt="" />Account</a>
       </nav>
     </div>
 
@@ -209,7 +210,9 @@
       <button class="media-lightbox-nav is-next" type="button" data-lightbox-direction="1" aria-label="Next image"><svg class="icon"><use href="#icon-chevron-right" /></svg></button>
     </div>
 
+    <script src="portal-data.js"></script>
     <script src="script.js?v=chat-premium-card-20260710"></script>
     <script src="account.js"></script>
+    <script src="portal.js"></script>
   </body>
 </html>

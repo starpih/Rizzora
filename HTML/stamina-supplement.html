@@ -1,28 +1,32 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23ec4caf'/%3E%3C/svg%3E" />
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Stamina Supplement | Rizzora</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="account.css" />
+  <link rel="stylesheet" href="portal.css" />
 </head>
-<body class="account-page">
+<body class="account-page" data-portal-page="stamina">
   <div class="account-layout">
-    <aside class="account-nav" aria-label="Primary navigation"><a class="account-brand" href="index.html">RIZZORA</a><nav><a href="index.html">Home</a><a href="chat.html">Messages</a><a class="is-current" href="user-center.html">Account</a></nav></aside>
-    <main class="account-content">
-      <header class="account-heading"><div><a class="account-back" href="user-center.html">← User Center</a><h1>Stamina Supplement</h1></div></header>
+    <aside class="account-nav" aria-label="Primary navigation"><a class="account-brand" href="index.html">RIZZORA</a><nav><a href="index.html">Home</a><a href="explore.html">Explore</a><a href="chat.html">Chats</a><a class="is-current" href="user-center.html" aria-current="page">My Account</a></nav></aside>
+    <main class="account-content" id="content">
+      <header class="account-heading"><div><a class="account-back" href="user-center.html">← My Account</a><h1>Stamina Supplement</h1></div></header>
       <div class="supplement-content">
         <h2>Choose a little something to keep the conversation going.</h2>
-        <p>Stamina is shared across all companions.</p>
+        <p>Stamina is shared across all companions. Amounts and prices below are samples, not a confirmed price list.</p>
         <div class="supplement-options" role="radiogroup" aria-label="Choose a Stamina pack"></div>
         <p class="supplement-note">Stamina validity and purchase terms are awaiting confirmation.</p>
         <button class="supplement-checkout" type="button">Simulate purchase</button>
-        <p class="supplement-note">Demo only. No payment will be processed.</p>
+        <p class="supplement-note">Demo only. No payment will be processed. Chat does not spend these sample points, because a per-message cost is not confirmed.</p>
         <p class="supplement-result" role="status" hidden></p>
       </div>
     </main>
   </div>
+  <script src="portal-data.js"></script>
   <script src="supplement.js"></script>
+  <script src="portal.js"></script>
 </body>
 </html>
