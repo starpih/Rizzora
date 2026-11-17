@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Personal center | Rizzora</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23ec4caf'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="brand.css" />
+  </head>
+  <body data-page="account">
+    <a class="skip-link" href="#content">Skip to content</a>
+    <header class="site-header">
+      <div class="brand-lockup">
+        <a class="wordmark" href="index.html">RIZZORA</a>
+        <button class="nav-toggle btn-ghost" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      </div>
+      <nav id="site-nav" class="site-nav" aria-label="Primary">
+        <a href="index.html" data-nav="home">Home</a>
+        <a href="discover.html" data-nav="discover">Discover</a>
+        <a href="subscription.html" data-nav="subscription">Subscription</a>
+        <a href="chat.html" data-nav="chat">Chat</a>
+        <a href="safety.html" data-nav="safety">Safety</a>
+      </nav>
+      <div class="account-slot" data-account-slot></div>
+    </header>
+    <main class="page" id="content" data-account>
+      <p class="kicker">Your preview</p>
+      <h1>Personal center</h1>
+      <p class="status" data-profile-status role="status"></p>
+      <section class="panel">
+        <h2>Profile</h2>
+        <label for="nickname">Display name</label>
+        <p class="nickname-field"><input id="nickname" data-nickname maxlength="32" autocomplete="off" /></p>
+        <div class="avatar-row" data-avatar-choices></div>
+        <button class="btn" type="button" data-save-profile>Save display</button>
+        <p class="demo-note">The name and portrait stay in this browser. There is no photo upload.</p>
+      </section>
+      <section class="section panel" id="stamina">
+        <h2>Stamina</h2>
+        <p data-membership></p>
+        <p data-free-line></p>
+        <p class="balance-line"><span>Monthly grant</span><strong data-monthly>0</strong></p>
+        <p class="balance-line"><span>Purchased, kept long term</span><strong data-purchased>0</strong></p>
+        <p class="demo-note">All sample chat spends Stamina after the free messages, including VIP. Monthly balance is used first and is replaced by the next grant. Purchased Stamina stays. A message rate, reset clock, and time zone are not confirmed. Packs below are illustrative.</p>
+        <div class="pack-row" data-packs></div>
+      </section>
+      <section class="section panel">
+        <h2>Subscription</h2>
+        <p class="quiet">Manage the sample flag only. Canceling here does not reach a payment provider.</p>
+        <div class="inline-actions">
+          <a class="btn-ghost" href="subscription.html">View sample plans</a>
+          <button class="btn-ghost" type="button" data-cancel-renew>Toggle sample auto-renew</button>
+        </div>
+      </section>
+      <section class="section panel">
+        <h2>Purchase records</h2>
+        <div data-records></div>
+      </section>
+      <section class="section vibe-card" data-vibe></section>
+      <section class="section panel">
+        <h2>Sample states</h2>
+        <p class="demo-note">These switches set the local preview. They are not a live account and they do not pass time.</p>
+        <div class="inline-actions">
+          <button class="btn-ghost" type="button" data-preset="free-day1">Free · day 1</button>
+          <button class="btn-ghost" type="button" data-preset="free-day4">Free · day 4</button>
+          <button class="btn-ghost" type="button" data-preset="free-pack">Free · purchased Stamina</button>
+          <button class="btn-ghost" type="button" data-preset="vip-full">VIP · 60,000 monthly</button>
+          <button class="btn-ghost" type="button" data-preset="vip-pack">VIP · purchased only</button>
+        </div>
+      </section>
+      <section class="section inline-actions">
+        <button class="btn-ghost" type="button" data-reset-demo>Reset demo data</button>
+        <button class="btn-ghost" type="button" data-delete-account>Delete demo profile</button>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <p>Sign-out returns to the same public home.</p>
+      <a href="safety.html">Privacy draft</a>
+    </footer>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

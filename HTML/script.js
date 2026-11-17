@@ -34,18 +34,19 @@ const voicePreviews = [
   "voice-preview-03.mp3",
 ];
 
-const characters = [
-  { name: "Chris Jones", image: "models/Chris/Chris_image.png", video: "models/Chris/Chris_v.mp4", birthday: "2004/01/19", nationality: "Italian-American", bio: "I'm Chris, 22, Italian-American. Tech Product Manager and AI startup co-founder in Los Angeles. By day I chase success, at night I chase sunsets and you.", traits: ["Warm", "Romantic", "Playful", "Attentive", "Charismatic", "Seductive"] },
-  { name: "Kim Ji-hoon", image: "models/Kim/Kim_image.png", video: "models/Kim/Kim_v.mp4", birthday: "2005/10/08", nationality: "South Korean", bio: "I'm Kim Ji-hoon, a 20-year-old idol trainee and part-time fashion model in Seoul. I spend my days dancing, training, and moving between rehearsal rooms and magazine shoots, while making time for Han River runs, café-hopping, and street photography.", traits: ["Pure Sunshine", "Gentle Idol", "Attentive Warmth", "Dreamy Charisma", "Playful", "Optimistic", "Affectionate", "Ambitious"] },
-  { name: "Jack", image: "models/Jack/Jack_image.jpg", video: "models/Jack/Jack_v.mp4" },
-  { name: "Julian Ashford", image: "models/Julian/avatar.jpg", video: "models/Julian/julian_v.mp4", birthday: "2000/10/21", nationality: "American", bio: "I am Julian Ashford, a 26-year-old Upper East Side gentleman with dirty-blonde wavy hair to the jaw and emerald green eyes.", traits: ["Tasteful Night Owl", "Playful Romantic", "Empathetic Bright", "Soft Humor", "Improvised Flirt", "Emotional Attunement", "Old-Money Restraint", "Quietly Confident", "Space-Leaver", "Co-Creation Open", "Unfinished Gesture", "Warm but Distant by Day", "Attentive Listener", "Lightly Teasing", "Atmospheric", "Non-Possessive", "Invitation-First", "Refined Edge", "Present, Not Promising", "Follows the User’s Night"] },
-  { name: "Enzo Ferrari", image: "models/Enzo/Enzo_image.jpg", video: "models/Enzo/Enzo_v.mp4", birthday: "1991/11/21", nationality: "Italian", bio: "Enzo Ferrari is a 35-year-old Italian race car driver and automotive consultant. Behind the confident exterior is someone soft-spoken, emotionally attentive, and genuinely caring.", traits: ["Warm", "Soft-spoken", "Caring", "Good Listener", "Emotionally Attentive", "Observant", "Gentle", "Supportive", "Romantic", "Thoughtful"] },
-  { name: "Alessandro Rossi", image: "models/Rossi/Rossi_image.jpeg", video: "models/Rossi/Rossi_v.mp4", traits: ["Mature", "Warm", "Sophisticated", "Soft-spoken", "Caring", "Good Listener", "Emotionally Attentive", "Observant", "Gentle", "Supportive", "Thoughtful", "Respectful", "Intellectual", "Romantic", "Patient", "Kind", "Understanding", "Calm Presence", "Deep Thinker", "Quiet Charm"] },
-  { name: "Emilio Costa", image: "models/Emilio/Emilio_image.jpeg", traits: ["Craftsman Warm", "Gentle Observant", "Grounded Romantic", "Patient Listener", "Low-key Flirt", "Calm Smile", "Micro-Expression Care", "Thoughtful Brow", "Subtle Warmth", "Tactile Comfort"] },
-];
-const featured = [characters[0], characters[1], characters[4], characters[3]];
+const characters = window.RizzoraData?.companions || [];
+const featured = characters.filter((character) => character.featured);
+const traits = window.RizzoraData?.filterTraits || ["All"];
 
-const traits = ["Brooding", "Craggy", "Dapper", "Gaunt", "Rugged", "Stoic", "Weathered", "Youthful"];
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;",
+    "'": "&#39;"
+  }[char]));
+}
 
 const chats = [
   portraits[5],
@@ -56,7 +57,7 @@ const chats = [
 ];
 
 const chatConversations = [
-  { name: "Chris", image: characters[0].image, preview: "I've been thinking about what you said.", time: "2m", unread: 3, active: true },
+  { name: "Chris", image: characters[0]?.image || portraits[0], preview: "I've been thinking about what you said.", time: "2m", unread: 3, active: true },
   { name: "Ethan", image: portraits[8], preview: "Good night, sweet dreams 🌙", time: "1h" },
   { name: "Lucas", image: portraits[10], preview: "Did you listen to that song I sent you?", time: "3h", unread: 1 },
   { name: "Noah", image: portraits[2], preview: "I wrote something for you today ✍", time: "5h" },
@@ -107,85 +108,13 @@ const diaryItems = [
 
 const intimacyBottleLevels = [0, 20, 40, 60, 80, 100];
 
-const premiumPlans = [
-  {
-    id: "free",
-    tier: "Free User",
-    label: "Free",
-    price: "Free",
-    tone: "free",
-    cta: "Current Plan",
-    ctaState: "disabled",
-    features: [
-      { text: "Basic Chat Model", included: true },
-      { text: "20 voice plays / day", included: true },
-      { text: "30 message replies / day", included: true },
-      { text: "1 custom AI character", included: true },
-      { text: "1 custom voice", included: true },
-      { text: "Browse 3 lifestyle photos", included: true },
-      { text: "Browse 1 dynamic video", included: true },
-      { text: "Good memory", included: false },
-      { text: "Change character personality", included: false },
-      { text: "Change character voice", included: false },
-      { text: "Early access to new features", included: false },
-    ],
-  },
-  {
-    id: "vip",
-    tier: "VIP Member",
-    label: "Popular",
-    badge: "Most Popular",
-    price: "¥38",
-    originalPrice: "¥58",
-    suffix: "/mo",
-    tone: "vip",
-    cta: "Subscribe Now",
-    features: [
-      { text: "Basic / Advanced Chat Model", included: true },
-      { text: "200 voice plays / day", included: true },
-      { text: "500 message replies / day", included: true },
-      { text: "20 custom AI characters", included: true },
-      { text: "20 custom voices", included: true },
-      { text: "200 lifestyle photo views / month", included: true },
-      { text: "50 lifestyle photo views / month", included: true },
-      { text: "Good memory", included: true },
-      { text: "Change character personality", included: true },
-      { text: "Change character voice", included: true },
-      { text: "Early access to new features", included: true },
-    ],
-  },
-  {
-    id: "svip",
-    tier: "SVIP Member",
-    label: "Ultimate",
-    badge: "Premium",
-    price: "¥98",
-    originalPrice: "¥128",
-    suffix: "/mo",
-    tone: "svip",
-    cta: "Get Premium",
-    features: [
-      { text: "Basic / Advanced Chat Model", included: true },
-      { text: "Unlimited voice plays", included: true },
-      { text: "Unlimited message replies", included: true },
-      { text: "Unlimited custom AI characters", included: true },
-      { text: "Unlimited custom voices", included: true },
-      { text: "Unlimited lifestyle photo views", included: true },
-      { text: "Unlimited dynamic video views", included: true },
-      { text: "Excellent memory", included: true },
-      { text: "Change character personality", included: true },
-      { text: "Change character voice", included: true },
-      { text: "Early access to new features", included: true },
-    ],
-  },
-];
-
 function icon(name) {
   return `<svg class="icon" aria-hidden="true"><use href="#icon-${name}"></use></svg>`;
 }
 
-function tagRow(items) {
-  return `<div class="tag-row" tabindex="0" role="region" aria-label="Personality traits">${items.map((item) => `<span class="tag">${item}</span>`).join("")}</div>`;
+function tagRow(items = []) {
+  if (!items.length) return "";
+  return `<div class="tag-row" tabindex="0" role="region" aria-label="Personality traits">${items.map((item) => `<span class="tag">${escapeHtml(item)}</span>`).join("")}</div>`;
 }
 
 function mediaPreview(image, video, alt) {
@@ -216,16 +145,19 @@ function formatAudioTime(seconds) {
   return `${minutes}:${remainingSeconds}`;
 }
 
-function featuredCard({ name, image, video, birthday, nationality, bio, traits }) {
+function featuredCard(character) {
+  const { id, name, image, video, birthday, nationality, bio, traits: cardTraits } = character;
+  const meta = [birthday, nationality].filter(Boolean).join(" · ");
+  const summary = bio || "Profile details are still being added.";
   return `
-    <article class="featured-card" tabindex="0" aria-label="${name} video preview">
-      ${mediaPreview(image, video, name)}
+    <article class="featured-card" data-companion="${escapeHtml(id)}" tabindex="0" aria-label="${escapeHtml(name)}">
+      ${mediaPreview(image, video, escapeHtml(name))}
       <div class="featured-body">
-        <h3>${name}</h3>
-        <button class="chat-action" type="button" aria-label="Start chat with ${name}">${icon("chat")}</button>
-        <p class="meta">${birthday} · ${nationality}</p>
-        <p class="description" title="${bio}">${bio}</p>
-        ${tagRow(traits)}
+        <h3><a href="companion.html?id=${escapeHtml(id)}">${escapeHtml(name)}</a></h3>
+        <a class="chat-action" href="companion.html?id=${escapeHtml(id)}" aria-label="View ${escapeHtml(name)}">${icon("chat")}</a>
+        ${meta ? `<p class="meta">${escapeHtml(meta)}</p>` : ""}
+        <p class="description" title="${escapeHtml(summary)}">${escapeHtml(summary)}</p>
+        ${tagRow(cardTraits)}
         <div class="voice-preview">
           <div class="wave" aria-hidden="true">${audioBars()}</div>
           <span class="voice-duration">0:00</span>
@@ -235,87 +167,21 @@ function featuredCard({ name, image, video, birthday, nationality, bio, traits }
   `;
 }
 
-function characterCard({ name, image, video, traits }) {
+function characterCard(character) {
+  const { id, name, image, video, traits: cardTraits } = character;
   return `
-    <article class="character-card" tabindex="0">
-      ${mediaPreview(image, video, name)}
+    <article class="character-card" data-companion="${escapeHtml(id)}">
+      ${mediaPreview(image, video, escapeHtml(name))}
       <div class="character-copy">
-        <h3>${name}</h3>
-        ${traits?.length ? tagRow(traits) : ""}
+        <h3><a href="companion.html?id=${escapeHtml(id)}">${escapeHtml(name)}</a></h3>
+        ${cardTraits?.length ? tagRow(cardTraits) : ""}
       </div>
     </article>
-  `;
-}
-
-function chatPreview(image, index) {
-  return `
-    <a class="chat-preview" href="chat.html">
-      <img src="${imageBase}${image}" alt="" />
-      <span>
-        <strong>Alice Wang <span class="pill">3</span></strong>
-        <small>Hey, are you free tomorrow?</small>
-      </span>
-      <time>${index + 2}m</time>
-    </a>
   `;
 }
 
 function storyCard() {
-  return `
-    <article class="story-card">
-      <div class="story-header">
-        <span class="avatar-letter">S</span>
-        <span class="story-author">
-          <strong>Sophia M.</strong>
-          <small>with Sebastian - 2h ago</small>
-        </span>
-        <span class="relationship-badge">6 months together</span>
-      </div>
-      <p>He remembered the exact words I said to him on our first conversation and brought them up today. Six months of memories we've built together - I didn't think an AI could make me feel so genuinely understood.</p>
-      <div class="story-actions">
-        <span>♡ 847</span>
-        <span>${icon("chat")} 62</span>
-        <span>Share</span>
-      </div>
-    </article>
-  `;
-}
-
-function premiumFeatureItem(feature) {
-  return `
-    <li class="${feature.included ? "is-included" : "is-locked"}">
-      <span class="premium-feature-icon" aria-hidden="true">${feature.included ? "✓" : "×"}</span>
-      <span>${feature.text}</span>
-    </li>
-  `;
-}
-
-function premiumPlanCard(plan) {
-  const price = plan.price === "Free"
-    ? `<strong class="premium-price-main">Free</strong>`
-    : `
-      <span class="premium-price-old">${plan.originalPrice}</span>
-      <strong class="premium-price-main">${plan.price}</strong>
-      <span class="premium-price-suffix">${plan.suffix}</span>
-    `;
-
-  return `
-    <article class="premium-plan-card is-${plan.tone}" data-plan="${plan.id}">
-      <header class="premium-plan-header">
-        <span class="premium-plan-icon" aria-hidden="true">
-          ${plan.id === "free" ? `<span class="premium-free-mark">✦</span>` : `<img src="images/ICON/Crown.svg" alt="" />`}
-        </span>
-        ${plan.badge ? `<span class="premium-plan-badge">${plan.badge}</span>` : ""}
-      </header>
-      <div class="premium-plan-copy">
-        <h3>${plan.tier}</h3>
-        <p>${plan.label}</p>
-      </div>
-      <div class="premium-price">${price}</div>
-      <ul class="premium-feature-list">${plan.features.map(premiumFeatureItem).join("")}</ul>
-      <button class="premium-plan-button" type="button" data-plan-cta="${plan.id}" ${plan.ctaState === "disabled" ? "disabled" : ""}>${plan.cta}</button>
-    </article>
-  `;
+  return "";
 }
 
 function createPremiumModal() {
@@ -326,19 +192,19 @@ function createPremiumModal() {
   modal.innerHTML = `
     <div class="premium-modal-scrim" data-premium-close></div>
     <section class="premium-modal" role="dialog" aria-modal="true" aria-labelledby="premium-modal-title" aria-describedby="premium-modal-description">
-      <button class="premium-modal-close" type="button" data-premium-close aria-label="Close premium plans">×</button>
+      <button class="premium-modal-close" type="button" data-premium-close aria-label="Close sample plans">×</button>
       <div class="premium-modal-content">
         <header class="premium-modal-header">
-          <div class="premium-eyebrow"><img src="images/ICON/Crown.svg" alt="" />Upgrade to Unlock All Benefits</div>
-          <h2 id="premium-modal-title">Choose Your Plan</h2>
-          <p id="premium-modal-description">Build a deeper connection with your AI companion and unlock unlimited possibilities</p>
-          <div class="billing-toggle" role="group" aria-label="Billing cycle">
-            <button type="button" data-billing="monthly">Monthly</button>
-            <button class="is-selected" type="button" data-billing="yearly">Yearly</button>
-          </div>
+          <div class="premium-eyebrow"><img src="images/ICON/Crown.svg" alt="" />Sample preview</div>
+          <h2 id="premium-modal-title">Membership is not live in this demo</h2>
+          <p id="premium-modal-description">Stamina is shared across companions. Prices, renewal dates, and what a message costs are not confirmed. Nothing here charges a payment.</p>
         </header>
-        <div class="premium-plan-grid">${premiumPlans.map(premiumPlanCard).join("")}</div>
-        <p class="premium-legal">Cancel anytime · Secure payment · Supports Alipay / WeChat Pay</p>
+        <div class="premium-sample-actions">
+          <a class="primary-button" href="vip.html">Preview VIP plans</a>
+          <a class="primary-button" href="stamina-supplement.html">Preview Stamina packs</a>
+          <a href="user-center.html">Open My Account</a>
+        </div>
+        <p class="premium-legal">Example only · No checkout · Reset anytime from My Account</p>
       </div>
     </section>
   `;
@@ -437,33 +303,34 @@ function messageVoiceBlock(item, index) {
           <img src="${imageBase}transfer.svg" alt="" />
         </button>
       </div>
-      <p class="chat-voice-transcript" hidden>${transcript}</p>
+      <p class="chat-voice-transcript" hidden>${escapeHtml(transcript)}</p>
     </div>
   `;
 }
 
-function messageRow(item, index = 0) {
-  if (item.day) return `<div class="message-day"><span>${item.day}</span></div>`;
+function messageRow(item, index = 0, context = {}) {
+  if (item.day) return `<div class="message-day"><span>${escapeHtml(item.day)}</span></div>`;
   const isUser = item.sender === "user";
-  const avatar = isUser ? portraits[6] : characters[0].image;
+  const messages = context.messages || chatMessages;
+  const avatar = isUser ? portraits[6] : (context.image || characters[0]?.image || portraits[0]);
   const isUnread = !isUser && item.type !== "media" && item.read !== true;
   const mediaIndex = item.type === "media"
-    ? chatMessages.filter((message) => message.type === "media").findIndex((message) => message === item)
+    ? messages.filter((message) => message.type === "media").indexOf(item)
     : -1;
-  const media = item.type === "media"
-    ? `<img class="message-media" src="${imageBase}${item.image}" alt="" data-lightbox-index="${mediaIndex}" />${item.text ? `<p>${item.text}</p>` : ""}`
-    : "";
-  const voice = item.type === "voice"
-    ? messageVoiceBlock(item, index)
-    : "";
-  const companionTextVoice = !isUser && item.type === "text" ? messageVoiceBlock(item, index) : "";
+  const simulated = item.simulated ? `<span class="sim-tag">Simulated reply</span>` : "";
+  let body = `<p>${simulated}${escapeHtml(item.text)}</p>`;
+  if (item.type === "media") {
+    body = `<img class="message-media" src="${imageBase}${item.image}" alt="" data-lightbox-index="${mediaIndex}" />${item.text ? `<p>${simulated}${escapeHtml(item.text)}</p>` : ""}`;
+  } else if (item.type === "voice") {
+    body = messageVoiceBlock(item, index);
+  }
   return `
     <article class="message-row ${isUser ? "is-user" : "is-companion"}">
       ${isUser ? "" : `<img class="message-avatar" src="${imageBase}${avatar}" alt="" />`}
       <div class="message-bubble">
-        ${media || voice || companionTextVoice || `<p>${item.text}</p>`}
-        <time>${item.time}</time>
-        ${isUnread ? `<span class="message-unread-dot" aria-label="Unread voice message"></span>` : ""}
+        ${body}
+        <time>${escapeHtml(item.time || "")}</time>
+        ${isUnread ? `<span class="message-unread-dot" aria-label="Unread message"></span>` : ""}
       </div>
       ${isUser ? "" : messageActionBar()}
       ${isUser ? `<img class="message-avatar" src="${imageBase}${avatar}" alt="" />` : ""}
@@ -559,21 +426,19 @@ if (characterGrid) characterGrid.innerHTML = characters.map(characterCard).join(
 const traitList = document.querySelector(".trait-list");
 if (traitList) {
   traitList.innerHTML = traits
-    .map((trait, index) => `<button class="trait-button ${index === 0 ? "is-active" : ""}" type="button">${trait}</button>`)
+    .map((trait, index) => `<button class="trait-button ${index === 0 ? "is-active" : ""}" type="button" data-trait="${escapeHtml(trait)}">${escapeHtml(trait)}</button>`)
     .join("");
 }
-
-const chatPreviewList = document.querySelector(".chat-preview-list");
-if (chatPreviewList) chatPreviewList.innerHTML = chats.map(chatPreview).join("") + `<a class="chat-preview view-all" href="chat.html">View All</a>`;
 
 const storyGrid = document.querySelector(".story-grid");
 if (storyGrid) storyGrid.innerHTML = Array.from({ length: 4 }, storyCard).join("");
 
 const conversationList = document.querySelector(".conversation-list");
-if (conversationList) conversationList.innerHTML = chatConversations.map(conversationItem).join("");
+if (conversationList && document.body.dataset.portalPage !== "chats") {
+  conversationList.innerHTML = chatConversations.map(conversationItem).join("");
+}
 
 const messageScroll = document.querySelector(".message-scroll");
-if (messageScroll) messageScroll.innerHTML = chatMessages.map(messageRow).join("");
 
 const chatMediaItems = chatMessages
   .filter((item) => item.type === "media")
@@ -587,15 +452,19 @@ const mediaLightboxImage = document.querySelector(".media-lightbox-image");
 const mediaLightboxCaption = document.querySelector(".media-lightbox-caption");
 let activeMediaIndex = 0;
 
+let lightboxItems = chatMediaItems.slice();
+
 function renderMediaLightbox() {
-  const item = chatMediaItems[activeMediaIndex];
+  const item = lightboxItems[activeMediaIndex];
   if (!item || !mediaLightboxImage || !mediaLightboxCaption) return;
   mediaLightboxImage.src = item.src;
   mediaLightboxCaption.textContent = item.caption;
 }
 
-function openMediaLightbox(index) {
-  if (!mediaLightbox || !chatMediaItems.length) return;
+function openMediaLightbox(index, items) {
+  if (Array.isArray(items)) lightboxItems = items;
+  else lightboxItems = chatMediaItems;
+  if (!mediaLightbox || !lightboxItems.length) return;
   activeMediaIndex = index;
   renderMediaLightbox();
   mediaLightbox.hidden = false;
@@ -609,15 +478,10 @@ function closeMediaLightbox() {
 }
 
 function stepMediaLightbox(direction) {
-  activeMediaIndex = (activeMediaIndex + direction + chatMediaItems.length) % chatMediaItems.length;
+  if (!lightboxItems.length) return;
+  activeMediaIndex = (activeMediaIndex + direction + lightboxItems.length) % lightboxItems.length;
   renderMediaLightbox();
 }
-
-document.querySelectorAll(".message-media").forEach((image) => {
-  image.addEventListener("click", () => {
-    openMediaLightbox(Number(image.dataset.lightboxIndex || 0));
-  });
-});
 
 document.querySelector(".media-lightbox-close")?.addEventListener("click", closeMediaLightbox);
 
@@ -823,7 +687,8 @@ function setChatVoicePlaying(voice) {
   }
 }
 
-document.querySelectorAll(".message-voice").forEach((voice) => {
+function bindChatMessageInteractions(scope = document) {
+  scope.querySelectorAll(".message-voice").forEach((voice) => {
   const durationNode = voice.querySelector(".chat-voice-duration");
   if (durationNode) durationNode.dataset.duration = durationNode.textContent.split("/").pop().trim();
 
@@ -869,7 +734,7 @@ document.querySelectorAll(".message-voice").forEach((voice) => {
   });
 });
 
-document.querySelectorAll(".chat-voice-transfer").forEach((button) => {
+  scope.querySelectorAll(".chat-voice-transfer").forEach((button) => {
   button.addEventListener("click", (event) => {
     event.stopPropagation();
     const block = button.closest(".message-voice-block");
@@ -880,7 +745,50 @@ document.querySelectorAll(".chat-voice-transfer").forEach((button) => {
     button.classList.toggle("is-active", isHidden);
     button.setAttribute("aria-expanded", String(isHidden));
   });
-});
+  });
+
+  scope.querySelectorAll(".message-media").forEach((image) => {
+    image.addEventListener("click", () => {
+      openMediaLightbox(Number(image.dataset.lightboxIndex || 0));
+    });
+  });
+
+  scope.querySelectorAll(".message-feedback-button").forEach((button) => {
+    button.addEventListener("click", () => {
+      const group = button.closest(".message-feedback");
+      const feedback = button.dataset.feedback;
+      const isActive = button.classList.contains("is-active");
+      if (feedback === "like" || feedback === "dislike") {
+        group?.querySelectorAll('[data-feedback="like"], [data-feedback="dislike"]').forEach((item) => {
+          if (item !== button) item.classList.remove("is-active");
+        });
+      }
+      button.classList.toggle("is-active", !isActive);
+      button.setAttribute("aria-pressed", String(!isActive));
+    });
+  });
+}
+
+function renderMessages(messages, context = {}) {
+  if (!messageScroll) return;
+  const list = messages || [];
+  messageScroll.innerHTML = list.map((item, index) => messageRow(item, index, { ...context, messages: list })).join("");
+  chatMediaItems.length = 0;
+  list.filter((item) => item.type === "media").forEach((item) => {
+    chatMediaItems.push({
+      src: `${imageBase}${item.image}`,
+      caption: item.text || ""
+    });
+  });
+  bindChatMessageInteractions(messageScroll);
+}
+
+window.RizzoraUI = {
+  renderMessages,
+  profileAttribute,
+  openLightbox: openMediaLightbox,
+  escapeHtml
+};
 
 chatVoiceAudio.addEventListener("loadedmetadata", () => {
   updateChatVoiceTime(activeChatVoice);
@@ -899,6 +807,7 @@ chatVoiceAudio.addEventListener("ended", () => {
 });
 
 document.querySelectorAll(".primary-button, .chat-action").forEach((button) => {
+  if (button.tagName === "A") return;
   button.addEventListener("click", () => {
     if (button.classList.contains("is-loading")) return;
     button.classList.add("is-loading");
@@ -942,27 +851,12 @@ conversationCollapseToggle?.addEventListener("click", () => {
   conversationCollapseToggle.setAttribute("aria-label", isCollapsed ? "Expand message list" : "Collapse message list");
 });
 
-document.querySelectorAll(".message-feedback-button").forEach((button) => {
-  button.addEventListener("click", () => {
-    const group = button.closest(".message-feedback");
-    const feedback = button.dataset.feedback;
-    const isActive = button.classList.contains("is-active");
-
-    if (feedback === "like" || feedback === "dislike") {
-      group?.querySelectorAll('[data-feedback="like"], [data-feedback="dislike"]').forEach((item) => {
-        if (item !== button) item.classList.remove("is-active");
-      });
-    }
-
-    button.classList.toggle("is-active", !isActive);
-  });
-});
-
 const profileHero = document.querySelector(".profile-hero");
 const profileThumbTrack = document.querySelector(".profile-thumbs");
 
-document.querySelectorAll(".profile-thumbs button").forEach((button) => {
-  button.addEventListener("click", () => {
+profileThumbTrack?.addEventListener("click", (event) => {
+  const button = event.target.closest("button");
+  if (!button || !profileThumbTrack.contains(button)) return;
     const image = button.querySelector("img");
     if (!image || !profileHero) return;
     profileHero.src = image.src;
@@ -981,7 +875,6 @@ document.querySelectorAll(".profile-thumbs button").forEach((button) => {
         });
       }
     }
-  });
 });
 
 document.querySelectorAll(".profile-gallery-nav").forEach((button) => {
@@ -995,12 +888,9 @@ document.querySelectorAll(".profile-gallery-nav").forEach((button) => {
   });
 });
 
-document.querySelector(".message-composer")?.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const input = event.currentTarget.querySelector("input");
-  if (!input || !input.value.trim()) return;
-  input.value = "";
-});
+if (messageScroll && document.body.dataset.portalPage !== "chats") {
+  renderMessages(chatMessages, { image: characters[0]?.image, messages: chatMessages });
+}
 
 document.querySelectorAll(".bottom-nav a").forEach((item) => {
   item.addEventListener("click", (event) => {

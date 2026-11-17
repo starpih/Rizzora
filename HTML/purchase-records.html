@@ -1,21 +1,22 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23ec4caf'/%3E%3C/svg%3E" />
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Manage Renewal | Rizzora</title>
-  <link rel="stylesheet" href="styles.css" /><link rel="stylesheet" href="account.css" />
+  <link rel="stylesheet" href="styles.css" /><link rel="stylesheet" href="account.css" /><link rel="stylesheet" href="portal.css" />
 </head>
-<body class="account-page">
+<body class="account-page" data-portal-page="records">
   <div class="account-layout">
-    <aside class="account-nav" aria-label="Primary navigation"><a class="account-brand" href="index.html">RIZZORA</a><nav><a href="index.html">Home</a><a href="chat.html">Messages</a><a class="is-current" href="user-center.html">Account</a></nav></aside>
-    <main class="account-content">
-      <header class="account-heading"><div><a class="account-back" href="user-center.html">← User Center</a><h1>Manage Renewal</h1></div></header>
+    <aside class="account-nav" aria-label="Primary navigation"><a class="account-brand" href="index.html">RIZZORA</a><nav><a href="index.html">Home</a><a href="explore.html">Explore</a><a href="chat.html">Chats</a><a class="is-current" href="user-center.html" aria-current="page">My Account</a></nav></aside>
+    <main class="account-content" id="content">
+      <header class="account-heading"><div><a class="account-back" href="user-center.html">← My Account</a><h1>Manage Renewal</h1></div></header>
       <div class="account-center">
         <div class="record-tabs" role="tablist" aria-label="Membership information">
           <button id="subscription-tab" role="tab" aria-controls="subscription-panel" aria-selected="true" type="button">Subscription</button>
           <button id="records-tab" role="tab" aria-controls="records-panel" aria-selected="false" tabindex="-1" type="button">Purchase Records</button>
         </div>
-        <p class="account-note">Subscription and order information below is an example.</p>
+        <p class="account-note">Subscription dates, amounts, and the card shown below are examples. Renewal cannot be changed from this demo.</p>
         <section id="subscription-panel" role="tabpanel" aria-labelledby="subscription-tab">
           <div class="record-block"><p>Current Plan</p><strong class="record-gold">VIP Membership</strong><div class="record-inset">Auto-renewal: <strong>Auto-renewal active</strong></div></div>
           <div class="record-block"><div class="record-row"><span>Next renewal date</span><strong>Aug 23, 2026</strong></div><div class="record-row"><span>Next renewal amount</span><strong>$24.95</strong></div><div class="record-row"><span>Payment method</span><strong>Visa ending in 4242</strong></div></div>
@@ -29,6 +30,8 @@
       </div>
     </main>
   </div>
+  <script src="portal-data.js"></script>
   <script src="purchase-records.js"></script>
+  <script src="portal.js"></script>
 </body>
 </html>

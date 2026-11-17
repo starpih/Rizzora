@@ -1,47 +1,58 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23ec4caf'/%3E%3C/svg%3E" />
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Account | Rizzora</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="account.css" />
+  <link rel="stylesheet" href="portal.css" />
 </head>
-<body class="account-page">
+<body class="account-page" data-portal-page="account">
   <div class="account-layout">
     <aside class="account-nav" aria-label="Primary navigation">
       <a class="account-brand" href="index.html">RIZZORA</a>
       <nav>
         <a href="index.html">Home</a>
-        <a href="chat.html">Messages</a>
-        <a class="is-current" href="user-center.html" aria-current="page">Account</a>
+        <a href="explore.html">Explore</a>
+        <a href="chat.html">Chats</a>
+        <a class="is-current" href="user-center.html" aria-current="page">My Account</a>
       </nav>
     </aside>
-    <main class="account-content">
+    <main class="account-content" id="content">
       <header class="account-heading">
-        <div><a class="account-back" href="index.html">← Back to home</a><h1>User Center</h1></div>
+        <div><a class="account-back" href="index.html">← Back to home</a><h1>My Account</h1></div>
       </header>
       <div class="account-center">
+          <p class="account-note">Sample member Mumu. Balances are examples stored in this browser, not a live account.</p>
           <button class="account-section account-profile account-profile-button" type="button" aria-expanded="false" aria-controls="state-menu">
             <img src="images/微信图片_20260605210259_381_1496.jpg" alt="" />
-            <div><h2>Mumu</h2><span class="account-plan-badge" data-account-plan>Free Account</span></div>
+            <div><h2>Mumu</h2><span class="account-plan-badge" data-account-plan>Free Account</span><span class="account-note">Tap to switch the sample state</span></div>
           </button>
           <div class="state-menu" id="state-menu" hidden>
-            <p>Preview account state</p>
-            <button type="button" data-state="day1">Free Account</button>
-            <button type="button" data-state="extra">Free Account + Stamina Pack</button>
-            <button type="button" data-state="vip">Premium</button>
-            <button type="button" data-state="vip_extra">Premium + Stamina Pack</button>
+            <p>Sample account state. This does not bill anyone.</p>
+            <button type="button" data-state="day1">Free · day 1 of 3</button>
+            <button type="button" data-state="day2">Free · day 2 of 3</button>
+            <button type="button" data-state="day3">Free · day 3 of 3</button>
+            <button type="button" data-state="day4">Free period ended</button>
+            <button type="button" data-state="extra">Free account + sample Stamina pack</button>
+            <button type="button" data-state="vip">Sample Premium</button>
+            <button type="button" data-state="vip_extra">Sample Premium + Stamina pack</button>
           </div>
           <section class="account-section" id="membership">
+            <div data-account-balance></div>
             <div data-membership-copy></div>
-            <p class="account-note">Stamina is shared across companions. Balances shown are examples.</p>
+            <p class="account-note">Stamina is shared across companions. The sample free period is 10 messages a day for the first three days. On day four this preview expects a Stamina pack or VIP. Time zone, when a day starts, unused messages, and the Stamina cost of a reply are not confirmed.</p>
           </section>
-          <button class="account-wide-action" type="button" disabled>Install APP <span>Coming soon</span></button>
-          <button class="account-wide-action" type="button" disabled>Log out <span>Demo</span></button>
+          <a class="account-wide-action" href="roadmap.html">Install app <span>On the roadmap</span></a>
+          <button class="account-wide-action" type="button" data-demo-reset>Reset sample data <span>Restores example chats and balances</span></button>
+          <button class="account-wide-action" type="button" data-demo-leave>Leave demo <span>No account is signed out</span></button>
       </div>
     </main>
   </div>
+  <script src="portal-data.js"></script>
   <script src="account.js"></script>
+  <script src="portal.js"></script>
 </body>
 </html>

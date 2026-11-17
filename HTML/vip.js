@@ -9,6 +9,8 @@
       localStorage.setItem("rizzora-web-account-demo", state === "extra" || state === "vip_extra" ? "vip_extra" : "vip");
       localStorage.setItem("rizzora-web-billing-demo", billing);
     } catch (_) {}
+    result.textContent = "";
+    result.innerHTML = `Sample Premium state saved in this browser. No payment or subscription was created. <a href="user-center.html">Return to My Account</a>`;
     result.hidden = false;
   });
 })();

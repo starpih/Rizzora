@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Subscription | Rizzora</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23ec4caf'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="brand.css" />
+  </head>
+  <body data-page="subscription">
+    <a class="skip-link" href="#content">Skip to content</a>
+    <header class="site-header">
+      <div class="brand-lockup">
+        <a class="wordmark" href="index.html">RIZZORA</a>
+        <button class="nav-toggle btn-ghost" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      </div>
+      <nav id="site-nav" class="site-nav" aria-label="Primary">
+        <a href="index.html" data-nav="home">Home</a>
+        <a href="discover.html" data-nav="discover">Discover</a>
+        <a href="subscription.html" data-nav="subscription">Subscription</a>
+        <a href="chat.html" data-nav="chat">Chat</a>
+        <a href="safety.html" data-nav="safety">Safety</a>
+      </nav>
+      <div class="account-slot" data-account-slot></div>
+    </header>
+    <main class="page" id="content" data-subscription>
+      <p class="kicker">Illustrative preview</p>
+      <h1>Choose Your Plan</h1>
+      <p class="lede">50% on the first billing period. Plans auto-renew until you cancel. These amounts are a reference offer, not final pricing, and this page does not take a payment.</p>
+      <p class="demo-note">You can read the plans before sign-in. Applying a sample plan asks for the demo sign-in, then a second confirmation. The 7-day trial is separate from the 3-day free conversation allowance. The trial’s own Stamina amount is not defined. A sample VIP state grants 60,000 monthly Stamina on every billing period, and that grant does not carry over.</p>
+      <fieldset class="plan-grid">
+        <legend class="visually-hidden">Choose your plan</legend>
+        <label class="plan">
+          <input type="radio" name="plan" value="monthly" checked />
+          <span>Monthly</span>
+          <strong>$9.95</strong>
+          <span>7 days free, then the first month</span>
+          <span class="meta"><s>$19.90</s> / month after the first period</span>
+        </label>
+        <label class="plan">
+          <input type="radio" name="plan" value="quarterly" />
+          <span>Quarterly</span>
+          <strong>$24.95</strong>
+          <span>First quarterly period</span>
+          <span class="meta"><s>$49.90</s></span>
+        </label>
+        <label class="plan">
+          <input type="radio" name="plan" value="yearly" />
+          <span>Yearly</span>
+          <strong>$89.95</strong>
+          <span>First year</span>
+          <span class="meta"><s>$179.90</s></span>
+        </label>
+      </fieldset>
+      <button class="btn-gold plan-cta" type="button" data-apply-plan>Get Premium</button>
+      <p class="status" data-plan-status role="status"></p>
+    </main>
+    <footer class="site-footer">
+      <p>Draft membership terms live on the Safety page.</p>
+      <a href="safety.html">Membership terms</a>
+    </footer>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
