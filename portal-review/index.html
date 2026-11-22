@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Meet Rizzora. Discover virtual AI companions, find your kind of conversation, and connect at your own pace.">
+  <meta name="theme-color" content="#18121f">
+  <title>Rizzora | For Every Lonely Soul.</title>
+  <link rel="stylesheet" href="portal.css?v=chris-living-room-20261119">
+  <link rel="stylesheet" href="portal-auth.css?v=20261119">
+  <link rel="stylesheet" href="portal-ip.css?v=hero-spacing-20261120">
+  <script src="characters.js?v=20261119" defer></script>
+  <script src="portal-auth.js?v=20261119" defer></script>
+  <script src="portal.js?v=auth-glass-20261119" defer></script>
+  <script src="portal-hero.js?v=hero-stories-20261120" defer></script>
+  <script src="portal-ip.js?v=hero-stills-20261120" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="wordmark" href="#home" aria-label="Rizzora home"><img src="assets/logo.svg" alt="" width="28" height="28">rizzora<span>®</span></a>
+    <nav id="site-nav" aria-label="Main navigation">
+      <a href="#home" data-nav="home" aria-current="page">Home</a>
+      <a href="#discover" data-nav="discover">Discover</a>
+      <button class="nav-chat" type="button" data-open="chat" id="nav-chat"><span>Chat</span><span class="nav-unread" id="chat-unread" aria-hidden="true" hidden></span></button>
+      <a href="#membership" data-nav="membership">Membership</a>
+    </nav>
+    <div class="header-actions">
+      <button class="login-button" type="button" data-open="login"><img class="icon" src="assets/user.svg" alt=""><span id="account-label">Log in</span></button>
+      <button class="menu-button icon-button" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><img class="icon" src="assets/menu.svg" alt=""></button>
+    </div>
+  </header>
+
+  <main id="main">
+    <div id="home-view">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-art" aria-hidden="true">
+          <img class="hero-slide is-active" data-hero-character="chris" data-hero-name="Chris" style="--hero-bleed: url('assets/hero-stills-4x3-v1/chris-bleed.webp')" src="assets/hero-stills-4x3-v1/01-chris-home.webp" alt="" width="1448" height="1086" fetchpriority="high" decoding="async">
+          <img class="hero-slide" data-hero-character="kim" data-hero-name="Kim" data-story="Backstage, Kim is still humming the encore. When he sees you, he starts over, just loud enough for two." style="--hero-bleed: url('assets/hero-stills-4x3-v1/kim-bleed.webp')" src="assets/hero-stills-4x3-v1/02-kim-backstage.webp" alt="" width="1448" height="1086" loading="lazy" decoding="async">
+          <img class="hero-slide" data-hero-character="julian" data-hero-name="Julian" data-story="The elevator doors open. Julian lets them close again. “I’d rather hear how your story ends.”" style="--hero-bleed: url('assets/hero-stills-4x3-v1/julian-bleed.webp')" src="assets/hero-stills-4x3-v1/03-julian-arrival.webp" alt="" width="1448" height="1086" loading="lazy" decoding="async">
+          <img class="hero-slide" data-hero-character="enzo" data-hero-name="Enzo" data-story="You and Enzo have been counting the lights along the coast. Somewhere around seven, your shoulders touch. Neither of you keeps count." style="--hero-bleed: url('assets/hero-stills-4x3-v1/enzo-bleed.webp')" src="assets/hero-stills-4x3-v1/04-enzo-seaside.webp" alt="" width="1448" height="1086" loading="lazy" decoding="async">
+          <img class="hero-slide" data-hero-character="hayes" data-hero-name="Hayes" data-story="Rain taps the bookshop window. Hayes slips a bookmark between the pages. “Shall we save the last chapter for another rainy day?”" style="--hero-bleed: url('assets/hero-stills-4x3-v1/hayes-bleed.webp')" src="assets/hero-stills-4x3-v1/05-hayes-bookstore.webp" alt="" width="1448" height="1086" loading="lazy" decoding="async">
+        </div>
+        <div class="hero-shade"></div>
+        <div class="hero-content">
+          <p class="eyebrow">CHARACTERS. STORIES. CONNECTION.</p>
+          <h1 id="hero-title">Rizzora</h1>
+          <p class="hero-line">For Every Lonely Soul.</p>
+          <div class="hero-voices-scroll" id="hero-voice-selector">
+          <div class="hero-voices" role="group" aria-label="AI companion voice previews">
+            <button class="hero-avatar" type="button" data-hero-voice="chris" data-voice-name="Chris" aria-label="Play Chris's voice" aria-pressed="false"><img src="assets/hero-companions/chris.jpg" alt="" width="64" height="64"></button>
+            <button class="hero-avatar" type="button" data-hero-voice="kim" data-voice-name="Kim" aria-label="Play Kim's voice" aria-pressed="false"><img src="assets/hero-companions/kim.jpg" alt="" width="64" height="64"></button>
+            <button class="hero-avatar" type="button" data-hero-voice="enzo" data-voice-name="Enzo" aria-label="Play Enzo's voice" aria-pressed="false"><img src="assets/hero-companions/enzo.jpg" alt="" width="64" height="64"></button>
+            <button class="hero-avatar" type="button" data-hero-voice="jack" data-voice-name="Jack" aria-label="Play Jack's voice" aria-pressed="false"><img src="assets/hero-companions/jack.jpg" alt="" width="64" height="64"></button>
+            <button class="hero-avatar" type="button" data-hero-voice="rossi" data-voice-name="Rossi" aria-label="Play Rossi's voice" aria-pressed="false"><img src="assets/hero-companions/rossi.jpg" alt="" width="64" height="64"></button>
+            <button class="hero-avatar" type="button" data-hero-voice="hayes" data-voice-name="Hayes" aria-label="Play Hayes's voice" aria-pressed="false"><img src="assets/hero-companions/hayes.jpg" alt="" width="64" height="64"></button>
+            <button class="hero-avatar" type="button" data-hero-voice="nabil" data-voice-name="Nabil" aria-label="Play Nabil's voice" aria-pressed="false"><img src="assets/hero-companions/nabil.jpg" alt="" width="64" height="64"></button>
+            <button class="hero-avatar" type="button" data-hero-voice="emilio" data-voice-name="Emilio" aria-label="Play Emilio's voice" aria-pressed="false"><img src="assets/hero-companions/emilio.jpg" alt="" width="64" height="64"></button>
+            <button class="hero-avatar" type="button" data-hero-voice="keisuke" data-voice-name="Keisuke" aria-label="Play Keisuke's voice" aria-pressed="false"><img src="assets/hero-companions/keisuke.jpg" alt="" width="64" height="64"></button>
+          </div>
+          </div>
+          <p class="hero-character-name">A moment with Chris</p>
+          <p class="hero-story">The song you sent is still playing when you arrive. Chris moves his sweater off the sofa. “I saved you the good spot.”</p>
+          <div class="hero-picker" role="group" aria-label="Choose a featured character">
+            <button type="button" data-show-hero="chris" aria-label="Show Chris" title="Chris" aria-pressed="true"><img src="assets/hero-stills-4x3-v1/chris-thumb.webp" width="48" height="48" alt=""></button>
+            <button type="button" data-show-hero="kim" aria-label="Show Kim" title="Kim" aria-pressed="false"><img src="assets/hero-stills-4x3-v1/kim-thumb.webp" width="48" height="48" alt=""></button>
+            <button type="button" data-show-hero="julian" aria-label="Show Julian" title="Julian" aria-pressed="false"><img src="assets/hero-stills-4x3-v1/julian-thumb.webp" width="48" height="48" alt=""></button>
+            <button type="button" data-show-hero="enzo" aria-label="Show Enzo" title="Enzo" aria-pressed="false"><img src="assets/hero-stills-4x3-v1/enzo-thumb.webp" width="48" height="48" alt=""></button>
+            <button type="button" data-show-hero="hayes" aria-label="Show Hayes" title="Hayes" aria-pressed="false"><img src="assets/hero-stills-4x3-v1/hayes-thumb.webp" width="48" height="48" alt=""></button>
+          </div>
+          <div class="hero-links">
+            <a class="button button-primary hero-cta" href="#character/chris">Meet Chris <img class="icon" src="assets/arrow.svg" alt=""></a>
+            <a class="hero-secondary" href="#discover">Explore the characters</a>
+          </div>
+        </div>
+        <div class="hero-media-controls" role="group" aria-label="Featured characters">
+          <button class="icon-button" id="hero-previous" type="button" aria-label="Previous character" title="Previous character"><img class="icon" src="assets/chevron.svg" alt=""></button>
+          <button class="icon-button" id="hero-play" type="button" aria-label="Pause slideshow" title="Pause slideshow"><img class="icon" src="assets/pause.svg" alt=""></button>
+          <button class="icon-button" id="hero-next" type="button" aria-label="Next character" title="Next character"><img class="icon" src="assets/chevron.svg" alt=""></button>
+        </div>
+        <a class="hero-scroll" href="#companions"><img class="icon" src="assets/down.svg" alt="">A little curiosity goes a long way</a>
+      </section>
+
+      <section id="companions" class="companions section-wrap" aria-labelledby="companions-title">
+        <div class="chat-preview-stage">
+          <div class="section-heading">
+            <div><p class="eyebrow">A LITTLE SPACE FOR YOU</p><h2 id="companions-title">What would you like to talk about today?</h2></div>
+          </div>
+          <div class="chat-preview" aria-label="Sample chat preview">
+            <div class="chat-preview-heading"><span class="eyebrow">SAMPLE CONVERSATION</span><span class="chat-preview-tag">Just a preview</span></div>
+            <p class="chat-preview-intro" id="chat-preview-instructions">Pick a starting point. See how a conversation could feel.</p>
+            <div class="chat-preview-options" role="group" aria-label="Choose a sample conversation" aria-describedby="chat-preview-instructions">
+              <button type="button" data-chat-preview="tired" aria-pressed="false" aria-controls="chat-preview-conversation">I'm a little tired today</button>
+              <button type="button" data-chat-preview="happy" aria-pressed="false" aria-controls="chat-preview-conversation">I have something happy to share</button>
+              <button type="button" data-chat-preview="casual" aria-pressed="false" aria-controls="chat-preview-conversation">I just feel like chatting</button>
+            </div>
+            <div id="chat-preview-conversation" class="chat-preview-conversation" role="status" aria-live="polite" aria-atomic="true">
+              <p class="chat-preview-placeholder">You don't need the perfect words to begin.</p>
+            </div>
+            <div class="chat-preview-footer">
+              <p>Sample only. No live AI connection. These exchanges aren't saved and won't use your free messages.</p>
+              <button class="button button-primary" type="button" data-open="chat">Start chatting <img class="icon" src="assets/arrow.svg" alt=""></button>
+            </div>
+          </div>
+        </div>
+        <div id="voice-selector-slot"></div>
+      </section>
+
+      <section id="find-your-spark" class="connection-band" aria-labelledby="connection-title">
+        <div class="section-wrap connection-inner">
+          <p class="eyebrow">FOLLOW YOUR CURIOSITY</p>
+          <h2 id="connection-title">A little curiosity.<br>A few possibilities.<br><em>Your kind of spark.</em></h2>
+          <div class="connection-bottom"><p>Different personalities. Different ways to connect.<br>Find the ones you're drawn to.</p><a class="text-link" href="find-your-spark.html">Find my spark <img class="icon" src="assets/arrow.svg" alt=""></a></div>
+        </div>
+      </section>
+
+      <section id="experience" class="experience" aria-labelledby="experience-title">
+        <div class="section-heading section-wrap"><div><p class="eyebrow">MORE WAYS TO FEEL CONNECTED</p><h2 id="experience-title">Make it a conversation<br>worth coming back to.</h2></div><p class="heading-aside">From everyday words to a voice you look forward to hearing.</p></div>
+        <div class="experience-layout conversation-scene">
+          <div class="scene-art">
+            <img class="scene-photo" src="assets/chris-living-room-night-v1.png" alt="Chris relaxing on a sofa in soft pajamas, smiling at his phone in a warmly lit living room at night" width="1821" height="864" loading="lazy">
+          </div>
+          <div class="experience-stage-inner section-wrap">
+          <div class="experience-copy">
+            <div class="experience-item"><span class="feature-number">01</span><div><h3>Start with a hello.</h3><p>Talk about your day, share a thought, or follow a little curiosity. Text chat is where your conversation begins.</p></div><img class="icon" src="assets/message.svg" alt=""></div>
+            <div class="experience-item"><span class="feature-number">02</span><div><h3>Hear a little more.</h3><p>VIP opens up voice messages, photo messages, and voice calls. All interactions use Stamina.</p><button class="inline-link" data-open="subscription" type="button">Explore VIP <img class="icon" src="assets/external.svg" alt=""></button></div><img class="icon" src="assets/mic.svg" alt=""></div>
+            <div class="experience-item"><span class="feature-number">03</span><div><h3>Go at your own pace.</h3><p>Choose who you talk to and when. Different companions bring different stories, interests, and personalities.</p></div><img class="icon" src="assets/heart.svg" alt=""></div>
+          </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="safety-band" aria-labelledby="safety-title">
+        <div class="section-wrap safety-inner"><div class="safety-heading"><img src="assets/shield.svg" alt="" width="40" height="40"><p class="eyebrow">A LITTLE CLARITY. A LOT OF CARE.</p><h2 id="safety-title">Your space.<br>Your pace.</h2></div><div class="safety-copy"><p>Rizzora is a world of AI companions. The people you see here are virtual characters, not real people on a dating app.</p><p>Our product does not offer explicit or nude content. Conversations are subject to content moderation.</p><button class="text-link" type="button" data-open="safety">Visit the Safety center <img class="icon" src="assets/arrow.svg" alt=""></button></div></div>
+      </section>
+
+      <section id="app" class="app-section section-wrap" aria-labelledby="app-title">
+        <div><p class="eyebrow">A LITTLE CLOSER, WHEREVER YOU ARE</p><h2 id="app-title">Take the spark<br>with you.</h2><p>For now, your next conversation starts on the web.</p><a class="button button-primary" href="#discover">Explore Rizzora <img class="icon" src="assets/arrow.svg" alt=""></a></div>
+        <div class="app-availability"><p>THE RIZZORA APP</p><h3>Something to<br>look forward to.</h3><div class="store-row"><button type="button" class="store-button" data-open="app"><span>iOS</span>App Store <small>Coming soon</small></button><button type="button" class="store-button" data-open="app"><span>Android</span>Google Play <small>Coming soon</small></button></div><small>Store availability and launch dates are not yet confirmed.</small></div>
+      </section>
+
+      <section class="final-cta"><p class="eyebrow">YOU DON'T HAVE TO KNOW WHAT TO SAY YET.</p><h2>A hello is a lovely start.</h2><a class="button button-light" href="#discover">Meet your AI companion <img class="icon" src="assets/arrow.svg" alt=""></a></section>
+    </div>
+
+    <section id="discover-view" class="discover-view section-wrap" aria-labelledby="discover-title" hidden>
+      <p class="eyebrow">THE RIZZORA WORLD</p><h1 id="discover-title">Find your kind of spark.</h1><p class="discover-description">Explore virtual personalities. Choose a companion, then say hello.</p>
+      <section class="discovery-band" aria-labelledby="recommend-title"><div class="section-heading"><div><p class="eyebrow" id="recommend-reason">SELECTED BY RIZZORA</p><h2 id="recommend-title">A few faces to know.</h2></div><a class="text-link" href="find-your-spark.html">Find my spark<img class="icon" src="assets/arrow.svg" alt=""></a></div><div class="companion-grid" id="recommend-characters"></div></section>
+      <section class="discovery-band" id="continue-band" hidden><h2>Continue your conversation.</h2><div class="ip-continue" id="continue-characters"></div></section>
+      <h2 class="all-characters-title">All characters</h2>
+      <div class="discovery-search"><img class="icon" src="assets/search.svg" alt=""><input id="character-search" type="search" placeholder="Search companions, interests, personalities..." aria-label="Search companions"></div>
+      <div class="filter-row">
+        <label>Nationality<select id="filter-nationality"><option value="">All nationalities</option></select></label>
+        <label>Personality<select id="filter-personality"><option value="">All personalities</option></select></label>
+        <label>Language<select id="filter-language"><option value="">All languages</option></select></label>
+        <label>Profession<select id="filter-profession"><option value="">All professions</option></select></label>
+        <label>Interests<select id="filter-interest"><option value="">All interests</option></select></label>
+        <button class="inline-link" type="button" id="reset-filters">Reset</button>
+      </div>
+      <p id="result-count" class="section-note" role="status"></p><div class="companion-grid" id="discover-characters"></div><p id="empty-results" hidden>No companions found. Try another search or reset your filters.</p>
+      <p class="section-note">Character profiles and language options in this preview are illustrative.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer section-wrap">
+    <div class="footer-top"><a class="wordmark" href="#home"><img src="assets/logo.svg" width="28" height="28" alt="">rizzora<span>®</span></a><p>AI companions.<br>Your kind of connection.</p></div>
+    <div class="footer-columns"><div><h3>Explore</h3><a href="#home">Home</a><a href="#discover">Discover</a><button data-open="subscription" type="button">Subscription</button><a href="#app">Get the app</a></div><div><h3>Care &amp; clarity</h3><button data-open="safety" type="button">AI companions explained</button><button data-legal="terms" type="button">Terms of use</button><button data-legal="privacy" type="button">Privacy policy</button><button data-legal="membership" type="button">Membership &amp; renewal</button></div><div><h3>Find us</h3><button data-social="Instagram" type="button">Instagram <img class="icon" src="assets/external.svg" alt=""></button><button data-social="TikTok" type="button">TikTok <img class="icon" src="assets/external.svg" alt=""></button><button data-social="YouTube" type="button">YouTube <img class="icon" src="assets/external.svg" alt=""></button><small>Official channels coming soon.</small></div><div class="footer-letter"><p>Something real<br>can start with<br><em>a little imagination.</em></p></div></div>
+    <div class="footer-bottom"><small>© 2026 Rizzora. All companions are virtual AI characters.</small><span>English</span></div>
+  </footer>
+
+  <dialog id="portal-dialog" aria-labelledby="dialog-title"><button class="dialog-close icon-button" type="button" aria-label="Close dialog"><img class="icon" src="assets/close.svg" alt=""></button><div id="dialog-content"></div></dialog>
+</body>
+</html>
