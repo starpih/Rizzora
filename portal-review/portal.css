@@ -116,8 +116,6 @@ body[data-view="discover"] .site-header { position: relative; background: var(--
 em { font-family: var(--font-display); font-weight: normal; color: var(--brand-primary); }
 .connection-bottom { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; }
 .connection-bottom p { color: var(--text-secondary); font-size: 14px; }
-.experience { padding-block: 88px 0; }
-.heading-aside { color: var(--text-secondary); max-width: 250px; font-size: 14px; }
 .experience-layout { min-height: 640px; aspect-ratio: 1821 / 864; position: relative; overflow: hidden; display: grid; align-items: center; }
 .scene-art { position: absolute; inset: 0; overflow: hidden; background: var(--bg-page); pointer-events: none; }
 .scene-photo { display: block; width: 100%; height: calc(100% + 80px); object-fit: cover; object-position: left center; position: absolute; top: -40px; transform: translate3d(0, var(--scene-offset, 0px), 0); will-change: transform; }
@@ -125,7 +123,7 @@ em { font-family: var(--font-display); font-weight: normal; color: var(--brand-p
 .experience-stage-inner { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 72px; padding-block: 64px; }
 .experience-copy { grid-column: 2; min-width: 0; }
 .experience-item { display: grid; grid-template-columns: 28px 1fr 24px; align-items: start; gap: 16px; padding-block: 28px; border-bottom: 1px solid var(--border-default); }
-.experience-item:first-child { padding-top: 0; }
+.experience-cta { margin-top: 24px; }
 .feature-number { color: var(--text-muted); font-size: 11px; padding-top: 8px; }
 .experience-item h3 { font: 30px/1.25 var(--font-display); margin-bottom: 12px; }
 .experience-item p { color: var(--text-secondary); font-size: 13px; max-width: 340px; }
@@ -228,7 +226,6 @@ dialog .button { margin-top: 24px; }
   .companion-traits { gap: 4px; }.companion-traits span { font-size: 9px; padding-inline: 6px; }
   .portrait-link { aspect-ratio: 3 / 4; }
   .connection-inner { padding-block: 48px; }.connection-inner h2 { font-size: 42px; }.connection-bottom { display: block; }.connection-bottom .text-link { margin-top: 24px; }
-  .experience { padding-block: 48px 0; }.heading-aside { margin-top: 18px; }
   .experience-layout { min-height: 0; aspect-ratio: auto; display: block; }
   .scene-art { position: relative; inset: auto; aspect-ratio: 4 / 3; }
   .scene-photo { top: 0; height: 100%; transform: none; will-change: auto; }
