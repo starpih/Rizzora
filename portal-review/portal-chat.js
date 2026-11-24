@@ -1,6 +1,5 @@
 (() => {
   // Deliberately memory-only: no message storage, network requests or trial charges.
-  const voiceSampleIds = new Set(['chris', 'emilio', 'enzo', 'hayes', 'jack', 'keisuke', 'kim', 'nabil', 'rossi']);
   const threads = new Map();
   let host;
   let activeId;
@@ -8,9 +7,9 @@
   let historySearch = '';
   const clock = new Intl.DateTimeFormat('en', { hour: 'numeric', minute: '2-digit' });
   const compactChat = matchMedia('(max-width: 760px)');
-  let voice = null;
+  const guestThreads = new Map();
+  let sendOnOpen;
   let disposeProfile = () => {};
-  let voiceRevision = 0;
   const byId = id => characters.find(c => c.id === id);
   const escape = value => { const node = document.createElement('span'); node.textContent = value; return node.innerHTML; };
   const prompts = ['I could use a quiet moment.', 'Something good happened today.', 'Tell me about your world.'];
@@ -22,18 +21,13 @@
     hayes: ['We can stay here while the rain passes. Would you like quiet company, or a little conversation?', 'Let’s save that moment like a bookmark. What happened?', 'The last chapter can wait. Is there a story you wish you could read for the first time again?'],
   };
   function thread(id) {
-    if (!threads.has(id)) threads.set(id, { messages: [{ role: 'assistant', text: byId(id).greeting, time: Date.now() }], stamina: 100, unread: 0, draft: '', pending: false, timer: null });
-    return threads.get(id);
+    const store = signedIn ? threads : guestThreads;
+    if (!store.has(id)) store.set(id, { messages: [{ role: 'assistant', text: byId(id).greeting, time: Date.now() }], stamina: 100, unread: 0, draft: '', pending: false, timer: null });
+    return store.get(id);
   }
   function replyFor(id, text, count) {
     const theme = /tired|quiet|sad|stress|hard|lonely|累/i.test(text) ? 0 : /good|happy|smile|great|开心/i.test(text) ? 1 : /world|music|song|book|tell me|兴趣/i.test(text) ? 2 : count % 3;
     return replies[id][theme];
-  }
-  function stopVoice() {
-    voiceRevision++;
-    if (voice) { voice.pause(); voice = null; }
-    const button = host?.querySelector('[data-chat-voice]');
-    if (button) { button.textContent = 'Play voice sample'; button.setAttribute('aria-pressed', 'false'); }
   }
   function visible(id) {
     return activeId === id && host && !host.hidden && (location.hash === `#chat/${id}` || location.hash === '#chat');
@@ -61,13 +55,14 @@
     const list = host?.querySelector('.history-threads');
     if (!list || host.hidden) return;
     const query = historySearch.trim().toLowerCase();
-    const rows = recentThreads().filter(([id]) => byId(id).name.toLowerCase().includes(query));
+    const conversations = signedIn ? recentThreads() : characters.map(c => [c.id, thread(c.id)]);
+    const rows = conversations.filter(([id]) => byId(id).name.toLowerCase().includes(query));
     const focusHref = list.contains(document.activeElement) && document.activeElement.getAttribute('href');
     list.innerHTML = rows.map(([id, t]) => {
       const c = byId(id), message = t.messages.at(-1);
       return `<a class="history-row" href="#chat/${id}" ${id === activeId ? 'aria-current="page"' : ''}>
         <img src="${c.image}" alt=""><span class="history-copy"><strong>${c.shortName}</strong><small>${message.role === 'user' ? 'You: ' : ''}${escape(message.text)}</small></span>
-        <span class="history-meta"><time>${clock.format(message.time)}</time>${t.unread ? `<b aria-label="${t.unread} unread messages">${t.unread}</b>` : ''}</span></a>`;
+        <span class="history-meta">${signedIn ? `<time>${clock.format(message.time)}</time>` : ''}${t.unread ? `<b aria-label="${t.unread} unread messages">${t.unread}</b>` : ''}</span></a>`;
     }).join('') || `<p class="history-empty">${query ? 'No matching conversations.' : 'Your conversations will appear here.'}</p>`;
     if (focusHref) list.querySelector(`[href="${focusHref}"]`)?.focus({ preventScroll: true });
   }
@@ -98,12 +93,13 @@
     // Append only new messages so assistive technology does not re-announce history.
     state.messages.slice(log.children.length).forEach(message => {
       const item = document.createElement('div');
-      item.className = `chat-bubble chat-${message.role}`;
+      item.className = `chat-message chat-${message.role}`;
       item.dataset.role = message.role;
       const label = document.createElement('span');
       label.className = 'chat-speaker';
       label.textContent = message.role === 'user' ? 'You' : byId(id).shortName;
       const text = document.createElement('p');
+      text.className = 'chat-bubble';
       text.textContent = message.text;
       const time = document.createElement('time');
       time.textContent = clock.format(message.time);
@@ -111,7 +107,7 @@
       if (message.newArrival) { time.className = 'chat-new-arrival'; time.setAttribute('aria-label', 'New message, ' + time.textContent); }
       item.append(label, text, time); log.append(item);
     });
-    host.querySelector('#chat-status').textContent = state.pending ? `${byId(id).shortName} is replying in this demo…` : '';
+    host.querySelector('#chat-status').textContent = state.pending ? `${byId(id).shortName} is replying…` : '';
     host.querySelector('.chat-starters').hidden = state.messages.length > 1;
     updateComposer(id);
     if (followLatest || state.pending) log.scrollTop = log.scrollHeight;
@@ -125,7 +121,12 @@
   function send(id) {
     const state = thread(id);
     const text = state.draft.trim().slice(0, 1000);
-    if (!text || state.pending || !signedIn) return;
+    if (!text || state.pending) return;
+    if (!signedIn) {
+      pendingChat = true;
+      portalAuth.open({ character: byId(id).shortName });
+      return;
+    }
     state.stamina = Math.max(0, state.stamina - 5);
     const ring = host.querySelector('.stamina-ring');
     ring.style.setProperty('--remaining', state.stamina + '%');
@@ -175,12 +176,10 @@
     };
     const glyph = label => `<span class="chat-fact-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${paths[label] || paths.MBTI}</svg></span>`;
     const facts = [['Birthday',c.profile?.birthday?.replaceAll('/','-')], ['Height',c.profile?.height], ['Zodiac Signs',c.profile?.zodiac], ['MBTI',c.profile?.mbti], ['Nationality',c.nationality], ['Occupation',c.profession]];
-    const clip = featuredVideos[c.id];
     panel.innerHTML = `<div class="chat-profile-top"><button type="button" class="chat-profile-close" aria-label="Close profile">×</button></div>
       <div class="chat-profile-media"><img class="chat-profile-portrait" src="${c.image}" alt="${c.name}, a fictional AI companion">
-      ${clip ? `<video class="chat-profile-video" src="${clip}" poster="${c.image}" controls playsinline preload="none" aria-label="${c.shortName} character clip" hidden></video>` : ''}
       <div class="gallery-lock" hidden><span class="lock-icon" aria-hidden="true"></span><strong>VIP portrait</strong><a href="#membership">Unlock with VIP</a></div>
-      <div class="chat-profile-media-actions">${clip ? '<button type="button" data-profile-play>▷ <span>Play</span></button>' : ''}<button type="button" data-profile-zoom aria-label="View full portrait">+</button></div></div>
+      <div class="chat-profile-media-actions"><button type="button" data-profile-zoom aria-label="View full portrait">+</button></div></div>
       ${pictures.length > 1 ? `<div class="chat-profile-gallery" role="group" aria-label="Profile images"><button type="button" data-profile-step="-1" aria-label="Previous profile photo">‹</button>${pictures.map((picture, index) => `<button type="button" data-profile-image="${index}" aria-label="${picture.label}" aria-pressed="${index === 0}">${locked(picture) ? '<span class="lock-icon" aria-hidden="true"></span>' : `<img src="${picture.src}" alt="">`}</button>`).join('')}<button type="button" data-profile-step="1" aria-label="Next profile photo">›</button></div>` : ''}
       <div class="chat-profile-copy"><div class="chat-profile-identity"><h2 id="chat-profile-title">${c.name}</h2><button type="button" data-profile-details aria-controls="chat-profile-details" aria-expanded="true" aria-label="Collapse profile details"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M5 17c0-5 8-5 8 0m2-9h4m-4 4h4m-4 4h4"/></svg></button></div>
       <p class="chat-profile-session">Fictional AI companion · demo</p>
@@ -218,16 +217,8 @@
     });
     let pictureIndex = 0;
     const portrait = panel.querySelector('.chat-profile-portrait');
-    const video = panel.querySelector('video');
-    const play = panel.querySelector('[data-profile-play]');
-    const stopClip = () => {
-      if (video) { video.pause(); video.hidden = true; }
-      portrait.hidden = false;
-      if (play) { play.querySelector('span').textContent = 'Play'; play.setAttribute('aria-pressed', 'false'); }
-    };
     const pickPicture = index => {
       pictureIndex = (index + pictures.length) % pictures.length;
-      stopClip();
       const isLocked = locked(pictures[pictureIndex]);
       panel.querySelector('.gallery-lock').hidden = !isLocked;
       panel.querySelector('.chat-profile-media-actions').hidden = isLocked;
@@ -245,24 +236,12 @@
       button.setAttribute('aria-expanded', String(!details.hidden));
       button.setAttribute('aria-label', `${details.hidden ? 'Expand' : 'Collapse'} profile details`);
     });
-    play?.setAttribute('aria-pressed', 'false');
-    play?.addEventListener('click', async () => {
-      if (!video.hidden) { stopClip(); return; }
-      stopVoice();
-      portrait.hidden = true; video.hidden = false;
-      play.querySelector('span').textContent = 'Stop'; play.setAttribute('aria-pressed', 'true');
-      try { await video.play(); }
-      catch { stopClip(); play.querySelector('span').textContent = 'Retry'; }
-    });
-    video?.addEventListener('ended', stopClip);
-    drawer.addEventListener('close', stopClip);
     const zoom = document.createElement('dialog');
     zoom.className = 'chat-portrait-zoom';
     zoom.setAttribute('aria-label', `${c.shortName} full portrait`);
     zoom.innerHTML = '<button type="button" aria-label="Close full portrait">×</button><img alt="">';
     host.append(zoom);
     panel.querySelector('[data-profile-zoom]').addEventListener('click', () => {
-      stopClip();
       zoom.querySelector('img').src = portrait.src;
       zoom.querySelector('img').alt = portrait.alt;
       zoom.showModal();
@@ -270,42 +249,32 @@
     zoom.querySelector('button').addEventListener('click', () => zoom.close());
     compact.addEventListener('change', sync);
     sync();
-    disposeProfile = () => { stopClip(); if (zoom.open) zoom.close(); compact.removeEventListener('change', sync); if (drawer.open) drawer.close(); disposeProfile = () => {}; };
+    disposeProfile = () => { if (zoom.open) zoom.close(); compact.removeEventListener('change', sync); if (drawer.open) drawer.close(); disposeProfile = () => {}; };
   }
   function render(container, id) {
-    disposeProfile(); stopVoice(); host = container; activeId = null;
+    disposeProfile(); host = container; activeId = null;
     document.title = 'Messages | Rizzora';
     if (id && !byId(id)) {
       host.innerHTML = '<header class="ip-page-heading"><h1>Character not found.</h1></header><a class="text-link" href="#discover">Explore the characters</a>';
       return;
     }
-    if (!signedIn) {
-      const c = byId(id) || characters[0];
-      host.innerHTML = `<div class="chat-layout guest-chat">${historyPane()}
-        <section class="guest-room"><header><img src="${c.image}" alt=""><strong>${c.name}</strong></header>
-        <div><h1>Your conversations</h1><p>Sign in to start a chat.</p><button type="button" data-open="login" class="button button-primary">Log in</button></div></section>
-        <aside class="guest-profile"><img src="${c.image}" alt=""><h2>${c.name}</h2></aside></div>`;
-      bindHistory();
-      portalAuth.open({ character: id ? c.shortName : '' });
-      return;
-    }
-    const inbox = !id;
-    if (!id) id = lastOpened || recentThreads()[0]?.[0];
+    const inbox = signedIn && !id;
+    if (!id) id = signedIn ? lastOpened || recentThreads()[0]?.[0] : characters[0].id;
     if (!id) {
       host.innerHTML = `<div class="chat-layout empty-chat">${historyPane()}<section class="empty-room"><div>
         <h1>No conversations yet</h1><p>Choose a companion and say hello.</p><a class="button button-primary" href="#discover">Explore the characters</a>
         </div></section></div>`;
       bindHistory(); return;
     }
-    activeId = lastOpened = id;
+    activeId = id;
+    if (signedIn) lastOpened = id;
     const c = byId(id);
     selectedCharacter = c;
     document.title = `Chat with ${c.shortName} | Rizzora`;
     const state = thread(id);
     if (!state.unread) state.messages.forEach(message => { message.newArrival = false; });
-    window.RizzoraIP?.rememberChat(id);
-    const hasVoice = voiceSampleIds.has(id);
-    host.innerHTML = `<div class="chat-layout ${inbox ? 'show-inbox' : ''}">${historyPane()}<section class="chat-room" aria-label="Conversation with ${c.shortName}"><header class="chat-heading"><a class="chat-back" href="#chat" aria-label="Back to conversations">←</a><span class="stamina-ring" role="meter" aria-label="${c.shortName} demo stamina" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${state.stamina}" title="Demo stamina: ${state.stamina}%" style="--remaining:${state.stamina}%"><img src="${c.image}" alt=""></span><div><h1 tabindex="-1">${c.shortName}</h1><p class="chat-presence"></p></div><button class="chat-profile" type="button" data-show-chat-profile aria-controls="chat-profile-panel">View profile</button></header><p class="chat-notice" id="chat-notice">Demo chat · Messages stay in this tab. Stamina and status are simulated.</p><div class="chat-log" id="chat-log" role="log" aria-label="Messages with ${c.shortName}" aria-live="polite" aria-relevant="additions" tabindex="0"></div><div class="chat-starters" aria-label="Conversation starters">${prompts.map((prompt,index) => `<button type="button" data-chat-prompt="${index}">${prompt}</button>`).join('')}</div><p class="chat-status" id="chat-status" role="status"></p><form id="chat-form" class="chat-composer"><label for="chat-message">Message ${c.shortName}</label><div class="chat-input-row"><textarea id="chat-message" rows="2" maxlength="1000" placeholder="Say something…" aria-describedby="chat-keyboard chat-notice"></textarea><button class="button button-primary" id="chat-send" type="submit">Send</button></div><div class="chat-tools"><small id="chat-keyboard">Enter to send · Shift + Enter for a new line</small>${hasVoice ? '<button type="button" data-chat-voice aria-pressed="false">Play voice sample</button>' : '<small>Voice sample coming soon</small>'}</div><p class="chat-audio-status" role="status"></p></form></section><div class="chat-profile-slot"></div><dialog class="chat-profile-dialog" aria-labelledby="chat-profile-title"></dialog></div>`;
+    if (signedIn) window.RizzoraIP.rememberChat(id);
+    host.innerHTML = `<div class="chat-layout ${inbox ? 'show-inbox' : ''}">${historyPane()}<section class="chat-room" aria-label="Conversation with ${c.shortName}"><header class="chat-heading"><a class="chat-back" href="${signedIn ? '#chat' : '#discover'}" aria-label="${signedIn ? 'Back to conversations' : 'Discover companions'}">←</a><span class="avatar-wrap"><span class="stamina-ring" role="meter" aria-label="${c.shortName} demo stamina" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${state.stamina}" title="Demo stamina: ${state.stamina}%" style="--remaining:${state.stamina}%"><img src="${c.image}" alt=""></span><button class="avatar-profile" type="button" data-show-chat-profile aria-label="${c.shortName}’s profile"></button></span><div><h1 tabindex="-1">${c.shortName}</h1><p class="chat-presence"></p></div></header><div class="chat-log" id="chat-log" role="log" aria-label="Messages with ${c.shortName}" aria-live="polite" aria-relevant="additions" tabindex="0"></div><div class="chat-starters" aria-label="Conversation starters">${prompts.map((prompt,index) => `<button type="button" data-chat-prompt="${index}">${prompt}</button>`).join('')}</div><p class="chat-status" id="chat-status" role="status"></p><form id="chat-form" class="chat-composer"><label for="chat-message">Message ${c.shortName}</label><div class="chat-input-row"><textarea id="chat-message" rows="2" maxlength="1000" placeholder="Say something…" aria-describedby="chat-keyboard"></textarea><button class="button button-primary" id="chat-send" type="submit">Send</button></div><div class="chat-tools"><small id="chat-keyboard">Enter to send · Shift + Enter for a new line</small></div></form></section><div class="chat-profile-slot"></div><dialog class="chat-profile-dialog" aria-labelledby="chat-profile-title"></dialog></div>`;
     bindHistory();
     clearUnread();
     updatePresence();
@@ -319,25 +288,25 @@
     });
     host.querySelector('#chat-form').addEventListener('submit', event => { event.preventDefault(); send(id); });
     host.querySelectorAll('[data-chat-prompt]').forEach(button => button.addEventListener('click', () => { input.value = prompts[Number(button.dataset.chatPrompt)]; state.draft = input.value; updateComposer(id); input.focus(); }));
-    host.querySelector('[data-chat-voice]')?.addEventListener('click', async event => {
-      const button = event.currentTarget;
-      const status = host.querySelector('.chat-audio-status');
-      if (voice) { stopVoice(); status.textContent = ''; return; }
-      host.querySelectorAll('video').forEach(video => video.pause());
-      const request = ++voiceRevision;
-      voice = new Audio(`assets/hero-companions/${id}.mp3`);
-      voice.addEventListener('ended', () => { if (request === voiceRevision) { stopVoice(); status.textContent = ''; } });
-      status.textContent = 'Loading a prerecorded voice sample…';
-      try { await voice.play(); if (request !== voiceRevision) return; button.textContent = 'Stop voice sample'; button.setAttribute('aria-pressed', 'true'); status.textContent = 'Prerecorded sample · not a live voice reply'; }
-      catch { if (request !== voiceRevision) return; stopVoice(); status.textContent = 'Could not play the sample. Try again.'; }
-    });
     renderMessages(id);
+    if (sendOnOpen === id) {
+      sendOnOpen = null;
+      send(id);
+    }
+  }
+  function resumeGuestDraft() {
+    const draft = guestThreads.get(activeId)?.draft;
+    guestThreads.clear();
+    if (!draft) return false;
+    thread(activeId).draft = draft;
+    if (pendingChat) sendOnOpen = activeId;
+    closeDialog();
+    navigateTo('chat/' + activeId);
+    return true;
   }
   window.addEventListener('online', updatePresence);
   window.addEventListener('offline', updatePresence);
   compactChat.addEventListener('change', clearUnread);
   document.addEventListener('visibilitychange', clearUnread);
-  window.addEventListener('pagehide', stopVoice);
-  document.addEventListener('visibilitychange', () => { if (document.hidden) stopVoice(); });
-  window.RizzoraChat = { render, stopVoice, leave() { activeId = null; host = null; disposeProfile(); stopVoice(); }, clear() { stopVoice(); threads.forEach(state => clearTimeout(state.timer)); threads.clear(); activeId = lastOpened = null; historySearch = ''; } };
+  window.RizzoraChat = { render, resumeGuestDraft, leave() { activeId = null; host = null; disposeProfile(); }, clear() { guestThreads.clear(); sendOnOpen = null; threads.forEach(state => clearTimeout(state.timer)); threads.clear(); activeId = lastOpened = null; historySearch = ''; } };
 })();

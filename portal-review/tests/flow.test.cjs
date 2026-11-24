@@ -24,14 +24,18 @@ async function openChat(page, id, { cancelFirst = false } = {}) {
   await navigate(page, `#character/${id}`);
   const hello = page.locator(`#ip-view [data-chat="${id}"]`).first();
   await hello.click();
-  if (cancelFirst) {
-    await page.locator('#portal-dialog[open]').waitFor();
-    await page.keyboard.press('Escape');
-    await page.locator('#portal-dialog[open]').waitFor({ state: 'hidden' });
-    assert.equal(new URL(page.url()).hash, `#character/${id}`);
-    await hello.click();
-  }
-  if (await page.locator('#portal-dialog[open]').count()) {
+  await page.waitForURL(url => url.hash === `#chat/${id}`);
+  await page.locator('#chat-message').waitFor();
+  if (await page.locator('#account-label').innerText() === 'Log in') {
+    if (cancelFirst) {
+      await page.locator('#chat-message').fill('A thought for later');
+      await page.locator('#chat-send').click();
+      await page.locator('#portal-dialog[open]').waitFor();
+      await page.keyboard.press('Escape');
+      assert.equal(await page.locator('#chat-message').inputValue(), 'A thought for later');
+      await page.locator('#chat-message').fill('');
+    }
+    await page.locator('.login-button').click();
     await page.locator('[data-auth-demo]').click();
   }
   await page.waitForURL(url => url.hash === `#chat/${id}`);
@@ -131,7 +135,8 @@ test('composer handles whitespace, multiline, IME and literal HTML without stori
     await openChat(page, 'kim');
     assert.equal(await page.locator('#chat-log [data-role="user"]').count(), 0);
     await page.reload();
-    assert.equal(await page.locator('#chat-message').count(), 0);
+    assert(await page.locator('#chat-message').isVisible());
+    assert.equal(await page.locator('.chat-user').count(), 0);
   } finally { await browser.close(); }
 });
 
@@ -246,19 +251,24 @@ test('browser Back cancels pending character authentication before a new chat is
     await navigate(page, '#character/chris');
     await navigate(page, '#character/kim');
     await page.locator('#ip-view [data-chat="kim"]').first().click();
+    await page.locator('#chat-message').fill('Only for Kim');
+    await page.locator('#chat-send').click();
     await page.locator('#portal-dialog[open]').waitFor();
     assert.match(await page.locator('#dialog-title').innerText(), /Kim/);
     await page.goBack();
-    await page.waitForURL(url => url.hash === '#character/chris');
-    await page.locator('#ip-view [data-chat="chris"]').first().waitFor();
+    await page.waitForURL(url => url.hash === '#character/kim');
     await page.locator('#portal-dialog[open]').waitFor({ state: 'hidden' });
-    await page.locator('#ip-view [data-chat="chris"]').first().click();
+    await navigate(page, '#chat/chris');
+    await page.locator('#chat-message').fill('Only for Chris');
+    await page.locator('#chat-send').click();
     await page.locator('#portal-dialog[open]').waitFor();
     assert.match(await page.locator('#dialog-title').innerText(), /Chris/);
     await page.locator('[data-auth-demo]').click();
     await page.waitForURL(url => url.hash === '#chat/chris');
     await page.locator('#chat-message').waitFor();
     assert.equal(await page.locator('#ip-view h1').innerText(), 'Chris');
+    await page.locator('.chat-user').waitFor();
+    assert.equal(await page.locator('.chat-user .chat-bubble').innerText(), 'Only for Chris');
     assert.equal(await page.locator('#portal-dialog[open]').count(), 0);
   } finally { await browser.close(); }
 });
@@ -392,7 +402,7 @@ test('mobile profile drawer preserves messages and draft through keyboard, galle
   } finally { await browser.close(); }
 });
 
-test('profile clip, full portrait and collapsible details work without disturbing chat or leaking media across routes', async () => {
+test('full portrait and collapsible details work without disturbing chat', async () => {
   const browser = await launch();
   try {
     const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, reducedMotion: 'reduce' });
@@ -400,9 +410,9 @@ test('profile clip, full portrait and collapsible details work without disturbin
     page.on('pageerror', error => errors.push(error.message));
     await page.goto(base);
     await openChat(page, 'chris');
-    await send(page, 'A happy moment before watching your clip.');
+    await send(page, 'A happy moment before looking at your photo.');
     const transcript = await page.locator('#chat-log').innerText();
-    const draft = 'Back to this after the clip.';
+    const draft = 'Back to this after the photo.';
     await page.locator('#chat-message').fill(draft);
     const panel = page.locator('#chat-profile-panel');
     const details = panel.locator('[data-profile-details]');
@@ -416,35 +426,19 @@ test('profile clip, full portrait and collapsible details work without disturbin
     assert.equal(await details.getAttribute('aria-expanded'), 'true');
     assert(await panel.locator('#chat-profile-details').isVisible());
 
-    const video = panel.locator('video');
-    const play = panel.locator('[data-profile-play]');
-    await play.click();
-    await page.waitForFunction(() => {
-      const clip = document.querySelector('.chat-profile-video');
-      return clip && !clip.hidden && !clip.paused && clip.readyState >= 2;
-    });
-    assert.equal(await play.getAttribute('aria-pressed'), 'true');
+    assert.equal(await panel.locator('video, [data-profile-play]').count(), 0);
     await panel.locator('[data-profile-image="1"]').click();
-    assert(await video.evaluate(node => node.paused && node.hidden));
-    assert.equal(await play.getAttribute('aria-pressed'), 'false');
-    await play.click();
-    await page.waitForFunction(() => !document.querySelector('.chat-profile-video').paused);
     await panel.locator('[data-profile-zoom]').click();
     const zoom = page.locator('dialog.chat-portrait-zoom');
     await zoom.waitFor();
-    assert(await video.evaluate(node => node.paused && node.hidden));
     assert.equal(await zoom.locator('img').evaluate(node => node.src), await panel.locator('.chat-profile-portrait').evaluate(node => node.src));
     await zoom.locator('img').evaluate(image => image.decode());
     await page.keyboard.press('Escape');
     await zoom.waitFor({ state: 'hidden' });
     assert(await panel.locator('[data-profile-zoom]').evaluate(node => node === document.activeElement));
 
-    await play.click();
-    await page.waitForFunction(() => !document.querySelector('.chat-profile-video').paused);
-    const oldVideo = await video.elementHandle();
     await panel.locator('a[href="#character/chris"]').click();
     await page.locator('#ip-view [data-chat="chris"]').first().waitFor();
-    assert(await oldVideo.evaluate(node => node.paused));
     await page.goBack();
     await page.locator('#chat-message').waitFor();
     assert.equal(await page.locator('#chat-message').inputValue(), draft);
@@ -491,14 +485,25 @@ test('Chat sign-in, empty history, unread replies, stamina and VIP photos', asyn
   try {
     const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
     await page.goto(base + '#chat');
-    await page.locator('#portal-dialog[open].auth-dialog').waitFor();
-    assert(await page.locator('.guest-chat').isVisible());
+    await page.locator('.chat-assistant .chat-bubble').waitFor();
+    assert.equal(await page.locator('dialog[open]').count(), 0);
+    assert.equal(await page.getByRole('button', { name: /View profile|Play voice sample/i }).count(), 0);
+    assert.equal(await page.locator('.chat-notice').count(), 0);
+    const searchBox = page.locator('.history-search input');
+    await searchBox.focus();
+    const focusStyle = await page.locator('.history-search').evaluate(el => {
+      const css = getComputedStyle(el);
+      return [css.outlineStyle, css.outlineWidth, css.outlineColor === getComputedStyle(document.querySelector('.chat-fact-icon')).color];
+    });
+    assert.deepEqual(focusStyle, ['solid', '1px', true]);
+    await page.locator('.login-button').click();
     await page.locator('[data-auth-demo]').click();
     await page.getByRole('heading', { name: 'No conversations yet' }).waitFor();
     await openChat(page, 'kim');
     await openChat(page, 'chris');
     await page.locator('#chat-message').fill('Thinking of the sea.');
     await page.locator('#chat-send').click();
+    assert.deepEqual(await page.locator('.chat-user').evaluate(el => [...el.children].map(child => child.tagName)), ['SPAN', 'P', 'TIME']);
     assert.equal(await page.getByRole('meter').getAttribute('aria-valuenow'), '95');
     await page.locator('.history-row[href="#chat/kim"]').click();
     const unread = page.locator('.history-row[href="#chat/chris"]');

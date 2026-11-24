@@ -335,7 +335,9 @@ function finishDemoLogin(user = {}) {
   }
   document.querySelector("#account-label").textContent = "My account";
   if (window.RizzoraIP?.afterLogin()) return;
-  if (/^#chat(?:\/|$)/.test(location.hash)) { closeDialog(); route(); }
+  if (/^#chat(?:\/|$)/.test(location.hash)) {
+    if (!window.RizzoraChat.resumeGuestDraft()) { closeDialog(); route(); }
+  }
   else if (pendingChat) showChat();
   else { closeDialog(); showAccount(); }
 }
@@ -376,8 +378,7 @@ document.addEventListener("click", (event) => {
   if (target.dataset.chat) {
     selectedCharacter = characters.find((c) => c.id === target.dataset.chat);
     if (!selectedCharacter) return;
-    pendingChat = !signedIn;
-    if (signedIn) showChat(); else showLogin();
+    showChat();
   }
   if (target.dataset.open === "login") showLogin();
   if (target.dataset.open === "subscription") showSubscription();
