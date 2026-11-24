@@ -18,19 +18,40 @@ const featuredVideos = {
   julian: "assets/featured-previews/julian.mp4",
 };
 
-function characterCard(character, discovery = false) {
+function discoveryCard(c) {
+  const birthday = c.profile?.birthday;
+  let age = "";
+  if (birthday) {
+    const [year, month, day] = birthday.split("/").map(Number);
+    const today = new Date();
+    const beforeBirthday = today.getMonth() + 1 < month || (today.getMonth() + 1 === month && today.getDate() < day);
+    age = today.getFullYear() - year - Number(beforeBirthday);
+  }
+  return `<article class="catalog-card">
+    <img class="catalog-portrait" src="${c.image}" alt="" loading="lazy">
+    <div class="catalog-caption">
+      <h3><a href="#character/${c.id}">${c.name}</a> <small>${age}</small></h3>
+      ${c.nationality ? `<p class="catalog-origin">${c.nationality}</p>` : ""}
+      <p class="catalog-summary">${c.summary}</p>
+      <div class="catalog-tags">${c.traits.map(trait => `<span>${trait}</span>`).join("")}</div>
+    </div>
+    <button type="button" class="catalog-chat" data-chat="${c.id}" aria-label="Say hello to ${c.name}" title="Say hello">${icon("message")}</button>
+  </article>`;
+}
+
+function characterCard(character) {
   const action = `data-profile="${character.id}"`;
-  const preview = !discovery && featuredVideos[character.id];
+  const preview = featuredVideos[character.id];
   return `<article class="companion-card">
     ${preview ? `<div class="portrait-preview" data-character-preview="${character.id}">` : ""}
-    <button type="button" class="portrait-link" ${action} aria-label="${discovery ? "Say hello to" : "Discover"} ${character.name}">
+    <button type="button" class="portrait-link" ${action} aria-label="Discover ${character.name}">
       <img src="${character.image}" alt="${character.name}, a virtual AI companion" loading="lazy">
       ${preview ? `<video class="portrait-video" data-src="${preview}" poster="${character.image}" preload="none" playsinline loop aria-hidden="true"></video>` : '<span class="portrait-badge">AI companion</span>'}
       <span class="portrait-arrow">${icon("external")}</span>
     </button>
     ${preview ? `<button class="preview-sound" type="button" data-preview-sound aria-label="Mute preview" title="Mute preview" aria-pressed="true">${icon("volume")}</button></div>` : ""}
     <div class="companion-caption"><h3>${character.name}</h3><p>${character.summary}</p><div class="companion-traits">${character.traits.map((trait) => `<span>${trait}</span>`).join("")}</div>
-    ${discovery ? `<button class="inline-link" type="button" data-chat="${character.id}">Say hello ${icon("arrow")}</button>` : ""}</div>
+    </div>
   </article>`;
 }
 
@@ -61,7 +82,7 @@ function renderDiscovery() {
       return !selection || getValues(character).includes(selection);
     });
   });
-  document.querySelector("#discover-characters").innerHTML = matches.map((c) => characterCard(c, true)).join("");
+  document.querySelector("#discover-characters").innerHTML = matches.map(discoveryCard).join("");
   document.querySelector("#result-count").textContent = `${matches.length} ${matches.length === 1 ? "companion" : "companions"}`;
   document.querySelector("#empty-results").hidden = matches.length > 0;
 }

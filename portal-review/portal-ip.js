@@ -23,7 +23,33 @@
   function saveFavorites() { try { sessionStorage.setItem(storageKey, JSON.stringify([...favorites])); } catch { /* Keep in-memory preferences. */ } }
   const image = (name) => `<img class="icon" src="assets/${name}.svg" alt="">`;
   const byId = (id) => characters.find((c) => c.id === id);
-  const profileLink = (c) => `<a class="ip-person" href="#character/${c.id}"><img src="${c.image}" alt="${c.name}" loading="lazy"><div><h3>${c.name}</h3><p>${c.summary}</p><div class="companion-traits">${c.traits.map((t) => `<span>${t}</span>`).join("")}</div></div></a>`;
+  const deck = document.querySelector(".spark-deck");
+  const deckStage = deck.querySelector(".deck-stage");
+  let deckIndex = 0;
+  function positionDeck() {
+    const slides = [...deckStage.children];
+    const count = slides.length;
+    slides.forEach((slide, index) => {
+      const distance = (index - deckIndex + count) % count;
+      slide.dataset.offset = distance > count / 2 ? distance - count : distance;
+      slide.inert = index !== deckIndex;
+    });
+    deck.querySelector(".deck-status").textContent = `${slides[deckIndex].dataset.name}, ${deckIndex + 1} of ${count}`;
+  }
+  function stepDeck(direction) {
+    const count = deckStage.children.length;
+    deckIndex = (deckIndex + direction + count) % count;
+    positionDeck();
+  }
+  deck.querySelector(".deck-prev").addEventListener("click", () => stepDeck(-1));
+  deck.querySelector(".deck-next").addEventListener("click", () => stepDeck(1));
+  deck.addEventListener("keydown", event => {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    event.preventDefault();
+    const onCard = deckStage.contains(event.target);
+    stepDeck(event.key === "ArrowLeft" ? -1 : 1);
+    if (onCard) deckStage.children[deckIndex].focus();
+  });
   const heading = (eyebrow, title, detail = "") => `<header class="ip-page-heading"><p class="eyebrow">${eyebrow}</p><h1 tabindex="-1">${title}</h1>${detail ? `<p>${detail}</p>` : ""}</header>`;
   const benefits = `<ul class="ip-benefits"><li>Text, voice messages, photo messages and voice calls</li><li>60,000 Stamina every month, on every billing cycle</li><li>Monthly Stamina resets; purchased extra Stamina is retained</li><li>All interactions use Stamina; included allowance is used first</li></ul>`;
   function recommendations() {
@@ -31,9 +57,17 @@
     const traits = new Set(liked.flatMap((c) => c.traits));
     const pool = characters.filter((c) => !favorites.has(c.id));
     const ranked = [...pool].sort((a, b) => b.traits.filter((t) => traits.has(t)).length - a.traits.filter((t) => traits.has(t)).length);
-    document.querySelector("#recommend-reason").textContent = liked.length ? `BASED ON YOUR SAVED CHARACTERS` : "SELECTED BY RIZZORA";
-    document.querySelector("#recommend-title").textContent = liked.length ? "More of your kind." : "A few faces to know.";
-    document.querySelector("#recommend-characters").innerHTML = (ranked.length ? ranked : characters).slice(0, 2).map(profileLink).join("");
+    const lineup = [...ranked, ...liked].slice(0, 5);
+    const orderChanged = lineup.some((c, index) => deckStage.children[index]?.dataset.id !== c.id);
+    if (orderChanged) deckIndex = 0;
+    deckStage.innerHTML = lineup.map(c => {
+      const scene = document.querySelector(`[data-hero-character="${c.id}"]`);
+      return `<a class="deck-card" data-id="${c.id}" data-name="${c.name}" href="#character/${c.id}" aria-label="Meet ${c.name}">
+        <img src="${scene?.getAttribute("src") || c.image}" alt="" decoding="async">
+        <span class="deck-caption"><strong>${c.name}</strong><span>${c.profession || c.interests[0]}</span></span>
+      </a>`;
+    }).join("");
+    positionDeck();
     document.querySelector("#continue-band").hidden = !signedIn || !chats.length;
     document.querySelector("#continue-characters").innerHTML = chats.map((id) => `<button type="button" data-chat="${id}"><img src="${byId(id).image}" alt=""><span>${byId(id).shortName}</span>${image("message")}</button>`).join("");
   }

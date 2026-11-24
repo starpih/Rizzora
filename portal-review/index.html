@@ -130,11 +130,19 @@
     </div>
 
     <section id="discover-view" class="discover-view section-wrap" aria-labelledby="discover-title" hidden>
-      <p class="eyebrow">THE RIZZORA WORLD</p><h1 id="discover-title">Find your kind of spark.</h1><p class="discover-description">Explore virtual personalities. Choose a companion, then say hello.</p>
-      <section class="discovery-band" aria-labelledby="recommend-title"><div class="section-heading"><div><p class="eyebrow" id="recommend-reason">SELECTED BY RIZZORA</p><h2 id="recommend-title">A few faces to know.</h2></div><a class="text-link" href="find-your-spark.html">Find my spark<img class="icon" src="assets/arrow.svg" alt=""></a></div><div class="companion-grid" id="recommend-characters"></div></section>
+      <header class="discovery-heading">
+        <h1 id="discover-title">Find your kind of spark.</h1>
+        <a class="text-link" href="find-your-spark.html">Find my spark <img class="icon" src="assets/arrow.svg" alt=""></a>
+      </header>
+      <section class="spark-deck" aria-label="Recommended characters" aria-roledescription="carousel">
+        <button class="icon-button deck-prev" type="button" aria-label="Previous recommendation" aria-controls="recommend-characters"><img class="icon" src="assets/chevron.svg" alt=""></button>
+        <div id="recommend-characters" class="deck-stage"></div>
+        <button class="icon-button deck-next" type="button" aria-label="Next recommendation" aria-controls="recommend-characters"><img class="icon" src="assets/chevron.svg" alt=""></button>
+        <span class="deck-status" role="status"></span>
+      </section>
       <section class="discovery-band" id="continue-band" hidden><h2>Continue your conversation.</h2><div class="ip-continue" id="continue-characters"></div></section>
       <h2 class="all-characters-title">All characters</h2>
-      <div class="discovery-search"><img class="icon" src="assets/search.svg" alt=""><input id="character-search" type="search" placeholder="Search companions, interests, personalities..." aria-label="Search companions"></div>
+      <div class="discovery-search"><span class="search-symbol icon" aria-hidden="true"></span><input id="character-search" type="search" placeholder="Search companions, interests, personalities..." aria-label="Search companions"></div>
       <div class="filter-row">
         <label>Nationality<select id="filter-nationality"><option value="">All nationalities</option></select></label>
         <label>Personality<select id="filter-personality"><option value="">All personalities</option></select></label>
