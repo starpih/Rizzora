@@ -111,19 +111,19 @@ body[data-view="discover"] .site-header { position: relative; background: var(--
 #featured-characters .companion-traits span { border-color: var(--tag-brand-border); color: var(--tag-brand-text); background: var(--tag-brand-bg); }
 .section-note { font-size: 11px; color: var(--text-muted); margin-top: 24px; }
 .connection-band { background: #29202e; border-block: 1px solid #ffffff0a; }
-.connection-inner { padding-block: 72px 56px; }
+.connection-inner { padding-block: 72px 56px; text-align: center; }
 .connection-inner h2 { font-size: 64px; line-height: 1.15; margin: 24px 0 40px; }
 em { font-family: var(--font-display); font-weight: normal; color: var(--brand-primary); }
-.connection-bottom { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; }
+.connection-bottom { display: grid; justify-items: center; gap: 24px; }
 .connection-bottom p { color: var(--text-secondary); font-size: 14px; }
-.experience-layout { min-height: 640px; aspect-ratio: 1821 / 864; position: relative; overflow: hidden; display: grid; align-items: center; }
+.experience-layout { min-height: max(640px, calc(100vw * 864 / 1821)); position: relative; overflow: hidden; display: grid; align-items: center; }
 .scene-art { position: absolute; inset: 0; overflow: hidden; background: var(--bg-page); pointer-events: none; }
 .scene-photo { display: block; width: 100%; height: calc(100% + 80px); object-fit: cover; object-position: left center; position: absolute; top: -40px; transform: translate3d(0, var(--scene-offset, 0px), 0); will-change: transform; }
 .scene-art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 42%, var(--bg-page) 80%), linear-gradient(180deg, var(--bg-page), transparent 10%, transparent 86%, var(--bg-page)); }
 .experience-stage-inner { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 72px; padding-block: 64px; }
 .experience-copy { grid-column: 2; min-width: 0; }
 .experience-item { display: grid; grid-template-columns: 28px 1fr 24px; align-items: start; gap: 16px; padding-block: 28px; border-bottom: 1px solid var(--border-default); }
-.experience-cta { margin-top: 24px; }
+.experience-cta { display: flex; width: fit-content; margin: 24px auto 0; }
 .feature-number { color: var(--text-muted); font-size: 11px; padding-top: 8px; }
 .experience-item h3 { font: 30px/1.25 var(--font-display); margin-bottom: 12px; }
 .experience-item p { color: var(--text-secondary); font-size: 13px; max-width: 340px; }
@@ -225,7 +225,7 @@ dialog .button { margin-top: 24px; }
   .companion-caption h3 { font-size: 23px; }.companion-caption p { font-size: 11px; }.portrait-badge { top: 10px; left: 10px; }
   .companion-traits { gap: 4px; }.companion-traits span { font-size: 9px; padding-inline: 6px; }
   .portrait-link { aspect-ratio: 3 / 4; }
-  .connection-inner { padding-block: 48px; }.connection-inner h2 { font-size: 42px; }.connection-bottom { display: block; }.connection-bottom .text-link { margin-top: 24px; }
+  .connection-inner { padding-block: 48px; }.connection-inner h2 { font-size: 42px; }
   .experience-layout { min-height: 0; aspect-ratio: auto; display: block; }
   .scene-art { position: relative; inset: auto; aspect-ratio: 4 / 3; }
   .scene-photo { top: 0; height: 100%; transform: none; will-change: auto; }
