@@ -13,7 +13,6 @@
   <script src="characters.js?v=20261119" defer></script>
   <script src="portal-auth.js?v=20261119" defer></script>
   <script src="portal.js?v=auth-glass-20261119" defer></script>
-  <script src="portal-world.js" defer></script>
   <script src="portal-hero.js?v=hero-stories-20261120" defer></script>
   <script src="portal-chat.js" defer></script>
   <script src="portal-ip.js?v=hero-stills-20261120" defer></script>
@@ -84,19 +83,26 @@
         <a class="hero-scroll" href="#companions"><img class="icon" src="assets/down.svg" alt="">A little curiosity goes a long way</a>
       </section>
 
-      <section id="companions" class="companions section-wrap" aria-labelledby="companions-title">
-        <div class="world-preview" data-world="chris">
-          <img class="world-scene" src="assets/hero-stills-4x3-v1/01-chris-home.webp" alt="" width="1448" height="1086">
-          <div class="world-content">
-            <p class="eyebrow">A LITTLE CLOSER</p>
-            <h2 id="companions-title">Step into his world.</h2>
-            <p class="world-name" id="world-name">Chris</p>
-            <p class="world-intro">A few things he comes back to. Pick one to linger a little.</p>
-            <div class="world-interests" role="group" aria-label="Explore Chris's interests"></div>
-            <div class="world-story" id="world-story" role="status" aria-live="polite" aria-atomic="true"><p>Choose a word for a small glimpse of his day.</p></div>
-            <a class="button button-primary world-cta" href="#character/chris">Meet Chris</a>
-            <p class="world-note">Imagined moments with a fictional AI character.</p>
-          </div>
+      <section id="companions" class="reasons section-wrap" aria-labelledby="reasons-title">
+        <h2 id="reasons-title">What brings you here tonight?</h2>
+        <p class="reasons-intro">Getting to know a character can start with a shared interest, a familiar voice, or a simple hello.</p>
+        <div class="reasons-grid">
+          <article>
+            <h3>Find your kind of company</h3>
+            <p>Chris saves you a seat on the sofa. Kim hums an encore just for you. Meet the characters and see whose company you’re drawn to.</p>
+          </article>
+          <article>
+            <h3>Follow a shared interest</h3>
+            <p>Ask Julian about jazz piano or Hayes about the book waiting on his shelf. A shared interest gives you an easy place to start.</p>
+          </article>
+          <article>
+            <h3>Hear the voice behind the face</h3>
+            <p>Play a voice sample before you say hello. Sometimes the way someone sounds tells you more than a profile can.</p>
+          </article>
+          <article>
+            <h3>Skip the perfect opening line</h3>
+            <p>Tell him one good thing about today, or pick a conversation starter and make it your own. A sentence is enough to begin.</p>
+          </article>
         </div>
         <div id="voice-selector-slot"></div>
       </section>

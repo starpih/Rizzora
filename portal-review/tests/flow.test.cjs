@@ -66,7 +66,7 @@ for (const width of [1440, 390]) {
         const picker = page.locator(`[data-show-hero="${id}"]`);
         await picker.focus();
         await picker.press('Enter');
-        await page.locator('.world-cta').click();
+        await page.locator('.hero-cta').click();
         await page.waitForURL(url => url.hash === `#character/${id}`);
         await page.locator(`#ip-view [data-chat="${id}"]`).first().waitFor();
         assert.match(await page.locator('#ip-view h1').innerText(), new RegExp(id, 'i'));

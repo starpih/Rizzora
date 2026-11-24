@@ -27,14 +27,14 @@
     timer = window.setTimeout(() => select(active + 1), 7000);
   }
 
-  function select(index, manual = false) {
+  function select(index) {
     const request = ++selection;
     const next = (index + slides.length) % slides.length;
     const slide = slides[next];
     // Keep the current scene visible if the next asset is still loading or failed.
     if (!slide.complete || !slide.naturalWidth) {
       slide.loading = "eager";
-      if (!slide.complete) slide.decode?.().then(() => { if (request === selection) select(index, manual); }).catch(() => {});
+      if (!slide.complete) slide.decode?.().then(() => { if (request === selection) select(index); }).catch(() => {});
       sync();
       return;
     }
@@ -47,16 +47,15 @@
     cta.href = profile ? `#character/${profile.id}` : "#discover";
     explore.hidden = !profile;
     cta.innerHTML = `${profile ? `Meet ${slide.dataset.heroName}` : "Explore the characters"} <img class="icon" src="assets/arrow.svg" alt="">`;
-    if (manual) document.dispatchEvent(new CustomEvent("rizzora:hero-choice", { detail: { id: slide.dataset.heroCharacter } }));
     sync();
   }
 
   for (const button of portraits) {
     const index = slides.findIndex((slide) => slide.dataset.heroCharacter === button.dataset.showHero);
-    if (index !== -1) button.addEventListener("click", () => select(index, true));
+    if (index !== -1) button.addEventListener("click", () => select(index));
   }
-  hero.querySelector("#hero-previous").addEventListener("click", () => select(active - 1, true));
-  hero.querySelector("#hero-next").addEventListener("click", () => select(active + 1, true));
+  hero.querySelector("#hero-previous").addEventListener("click", () => select(active - 1));
+  hero.querySelector("#hero-next").addEventListener("click", () => select(active + 1));
   play.addEventListener("click", () => { paused = !paused; sync(); });
   hero.addEventListener("mouseenter", () => { hovering = true; sync(); });
   hero.addEventListener("mouseleave", () => { hovering = false; sync(); });
