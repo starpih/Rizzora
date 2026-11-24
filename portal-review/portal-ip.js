@@ -146,7 +146,7 @@
     else document.title = "Rizzora | Characters. Stories. Connection.";
     closeMenu();
     const focusTarget = localProfileAnchor ? document.getElementById(hash) : isHome ? document.querySelector(".hero h1") : hash === "discover" ? document.querySelector("#discover-title") : extra.querySelector("h1");
-    if (focusTarget && (!initialLoad || localProfileAnchor)) {
+    if (!dialog.open && focusTarget && (!initialLoad || localProfileAnchor)) {
       focusTarget.setAttribute("tabindex", "-1");
       focusTarget.focus({ preventScroll: true });
     }
@@ -157,6 +157,7 @@
   window.RizzoraIP = {
     route,
     afterLogin() { if (!resumeCheckout) return false; resumeCheckout = false; pendingChat = false; closeDialog(); navigateTo("checkout"); return true; },
+    isVIP() { return signedIn && Boolean(membership); },
     rememberChat(id) { if (!chats.includes(id)) chats.unshift(id); },
   };
   dialog.addEventListener("close", () => { if (!signedIn) resumeCheckout = false; });

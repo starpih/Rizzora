@@ -335,7 +335,8 @@ function finishDemoLogin(user = {}) {
   }
   document.querySelector("#account-label").textContent = "My account";
   if (window.RizzoraIP?.afterLogin()) return;
-  if (pendingChat) showChat();
+  if (/^#chat(?:\/|$)/.test(location.hash)) { closeDialog(); route(); }
+  else if (pendingChat) showChat();
   else { closeDialog(); showAccount(); }
 }
 function showAccount() {
@@ -345,7 +346,6 @@ function showAccount() {
 function showChat() {
   if (!selectedCharacter) return;
   pendingChat = false;
-  updateUnreadCount(0);
   closeDialog();
   navigateTo(`chat/${selectedCharacter.id}`);
 }

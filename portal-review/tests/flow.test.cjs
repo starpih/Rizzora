@@ -93,8 +93,8 @@ for (const width of [1440, 390]) {
       await navigate(page, '#chat');
       await page.locator('#ip-view a[href="#chat/chris"]').first().click();
       await page.waitForURL(url => url.hash === '#chat/chris');
-      // The hash changes before its event renders the thread; the list has no composer.
-      await page.locator('#chat-message').waitFor();
+      // The desktop inbox already has a composer for the previously selected thread.
+      await page.locator('.chat-heading h1').filter({ hasText: /^Chris$/ }).waitFor();
       assert.equal(await page.locator('#ip-view h1').innerText(), 'Chris');
       assert.equal(await page.locator('#chat-log [data-role="user"]').count(), 1);
       assert.equal(await page.locator('#chat-log [data-role="user"] p').innerText(), 'A small happy moment with chris.');
@@ -299,25 +299,23 @@ test('all five chats show matching character details on the right with working o
       await portrait.evaluate(image => image.decode());
       assert.equal(await portrait.getAttribute('src'), character.image);
       const gallery = panel.locator('[data-profile-image]');
-      if (id === 'hayes') {
-        // Hayes has only the existing bookshop still; do not invent a second asset.
-        assert.equal(await gallery.count(), 0);
-      } else {
-        assert.equal(await gallery.count(), 2);
-        for (const choice of await gallery.all()) {
-          await choice.focus();
-          await choice.press('Enter');
-          assert.equal(await choice.getAttribute('aria-pressed'), 'true');
-          assert.equal(await panel.locator('[data-profile-image][aria-pressed="true"]').count(), 1);
-          assert.equal(await portrait.getAttribute('src'), await choice.locator('img').getAttribute('src'));
-          await portrait.evaluate(image => image.decode());
-          assert((await choice.boundingBox()).height >= 44);
-        }
-        await panel.locator('[data-profile-step="1"]').click();
-        assert.equal(await panel.locator('[data-profile-image="0"]').getAttribute('aria-pressed'), 'true');
-        await panel.locator('[data-profile-step="-1"]').click();
-        assert.equal(await panel.locator('[data-profile-image="1"]').getAttribute('aria-pressed'), 'true');
+      const freeCount = id === 'hayes' ? 1 : 2;
+      assert.equal(await gallery.count(), freeCount + 1);
+      for (const choice of (await gallery.all()).slice(0, freeCount)) {
+        await choice.focus();
+        await choice.press('Enter');
+        assert.equal(await choice.getAttribute('aria-pressed'), 'true');
+        assert.equal(await portrait.getAttribute('src'), await choice.locator('img').getAttribute('src'));
+        await portrait.evaluate(image => image.decode());
+        assert((await choice.boundingBox()).height >= 44);
       }
+      await panel.locator('[data-profile-step="1"]').click();
+      assert(await panel.locator('.gallery-lock').isVisible());
+      assert(await panel.locator('[data-profile-zoom]').isHidden());
+      await panel.locator('[data-profile-step="1"]').click();
+      assert.equal(await gallery.first().getAttribute('aria-pressed'), 'true');
+      await panel.locator('[data-profile-step="-1"]').click();
+      assert.equal(await gallery.last().getAttribute('aria-pressed'), 'true');
       await page.locator('[data-show-chat-profile]').focus();
       await page.locator('[data-show-chat-profile]').press('Enter');
       assert.equal(await page.evaluate(() => document.activeElement.id), 'chat-profile-panel');
@@ -486,4 +484,44 @@ test('refreshing Discover leaves the title unfocused and Tab reaches the skip li
   } finally {
     await browser.close();
   }
+});
+
+test('Chat sign-in, empty history, unread replies, stamina and VIP photos', async () => {
+  const browser = await launch();
+  try {
+    const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+    await page.goto(base + '#chat');
+    await page.locator('#portal-dialog[open].auth-dialog').waitFor();
+    assert(await page.locator('.guest-chat').isVisible());
+    await page.locator('[data-auth-demo]').click();
+    await page.getByRole('heading', { name: 'No conversations yet' }).waitFor();
+    await openChat(page, 'kim');
+    await openChat(page, 'chris');
+    await page.locator('#chat-message').fill('Thinking of the sea.');
+    await page.locator('#chat-send').click();
+    assert.equal(await page.getByRole('meter').getAttribute('aria-valuenow'), '95');
+    await page.locator('.history-row[href="#chat/kim"]').click();
+    const unread = page.locator('.history-row[href="#chat/chris"]');
+    await unread.locator('b').waitFor();
+    assert.equal(await unread.locator('b').innerText(), '1');
+    const search = page.getByRole('searchbox', { name: 'Search conversations' });
+    await search.fill('chr');
+    assert.equal(await page.locator('.history-row').count(), 1);
+    await unread.click();
+    await page.locator('.chat-heading h1').filter({hasText: /^Chris$/}).waitFor();
+    assert.equal(await unread.locator('b').count(), 0);
+    assert.equal(await page.locator('.chat-new-arrival').count(), 1);
+    await page.locator('[data-profile-image]').last().click();
+    await page.getByRole('link', { name: 'Unlock with VIP' }).click();
+    await page.locator('#plan-form button[type="submit"]').click();
+    await page.locator('#payment-consent').check();
+    await page.locator('#payment-form button[type="submit"]').click();
+    await page.getByRole('heading', { name: 'VIP is active.' }).waitFor();
+    await navigate(page, '#chat/chris');
+    await page.locator('[data-profile-image]').last().click();
+    assert(await page.locator('.gallery-lock').isHidden());
+    const photo = page.locator('.chat-profile-portrait');
+    await photo.evaluate(img => img.decode());
+    assert.match(await photo.getAttribute('src'), /chat-gallery\/chris/);
+  } finally { await browser.close(); }
 });
