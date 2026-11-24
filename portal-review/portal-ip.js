@@ -87,7 +87,6 @@
       portalAuth.close(); closeDialog();
     }
     stopMedia();
-    stopHeroVoice();
     stopFeaturedPreview();
     window.RizzoraChat?.leave();
     const hash = location.hash.slice(1);
@@ -123,15 +122,6 @@
     afterLogin() { if (!resumeCheckout) return false; resumeCheckout = false; pendingChat = false; closeDialog(); navigateTo("checkout"); return true; },
     rememberChat(id) { if (!chats.includes(id)) chats.unshift(id); },
   };
-  const voiceSlot = document.querySelector("#voice-selector-slot");
-  voiceSlot.append(document.querySelector("#hero-voice-selector"));
-  // Keep the existing audio controls; replace only their homepage presentation.
-  voiceSlot.querySelectorAll("[data-hero-voice]").forEach((button) => {
-    const symbol = document.createElement("span");
-    symbol.className = "voice-play-symbol";
-    symbol.setAttribute("aria-hidden", "true");
-    button.replaceChildren(symbol, document.createTextNode(button.dataset.voiceName));
-  });
   dialog.addEventListener("close", () => { if (!signedIn) resumeCheckout = false; });
   document.addEventListener("click", (event) => {
     const button = event.target.closest("button, a");

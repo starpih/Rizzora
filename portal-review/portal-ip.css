@@ -26,16 +26,6 @@ body[data-view="home"] .site-header { background: rgb(255 255 255 / 5%); -webkit
 .hero-media-controls .icon-button { width: 44px; height: 44px; background: #18121f80; }
 #hero-previous .icon { transform: rotate(90deg); }
 #hero-next .icon { transform: rotate(-90deg); }
-#voice-selector-slot .hero-voices-scroll { width: 100%; margin-block: 24px 0; padding: 4px; overflow: visible; }
-#voice-selector-slot .hero-voices { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 12px; width: auto; }
-#voice-selector-slot .hero-avatar { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: auto; height: auto; min-height: 44px; padding: 10px 12px; border: 0; border-radius: 8px; background: transparent; color: var(--text-secondary); font-size: 14px; transform: none; transition: none; }
-#voice-selector-slot .hero-avatar::before { content: none; }
-#voice-selector-slot .hero-avatar:hover, #voice-selector-slot .hero-avatar.is-playing { color: var(--text-primary); background: var(--tag-brand-bg); }
-#voice-selector-slot .hero-avatar.is-playing { color: var(--voice-halo-highlight); }
-#voice-selector-slot .hero-avatar:focus-visible { outline: 2px solid var(--brand-primary); outline-offset: 2px; }
-#voice-selector-slot .voice-play-symbol { width: 12px; font-size: 11px; }
-#voice-selector-slot .voice-play-symbol::before { content: ""; display: block; width: 8px; height: 10px; background: currentColor; clip-path: polygon(0 0, 100% 50%, 0 100%); }
-#voice-selector-slot .is-playing .voice-play-symbol::before { height: 8px; clip-path: none; }
 .discovery-band { padding-block: 24px 40px; border-bottom: 1px solid var(--border-default); margin-bottom: 36px; }
 .discovery-band h2, .all-characters-title { font-size: 32px; }
 .all-characters-title { margin-bottom: 16px; }

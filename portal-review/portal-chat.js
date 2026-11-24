@@ -1,5 +1,6 @@
 (() => {
   // Deliberately memory-only: no message storage, network requests or trial charges.
+  const voiceSampleIds = new Set(['chris', 'emilio', 'enzo', 'hayes', 'jack', 'keisuke', 'kim', 'nabil', 'rossi']);
   const threads = new Map();
   let host;
   let activeId;
@@ -207,7 +208,7 @@
     }
     const state = thread(id);
     window.RizzoraIP?.rememberChat(id);
-    const hasVoice = Boolean(document.querySelector(`[data-hero-voice="${id}"]`));
+    const hasVoice = voiceSampleIds.has(id);
     host.innerHTML = `<div class="chat-layout"><section class="chat-room" aria-label="Conversation with ${c.shortName}"><header class="chat-heading"><a class="chat-back" href="#chat" aria-label="Back to conversations">←</a><img src="${c.image}" alt=""><div><h1 tabindex="-1">${c.shortName}</h1><p>Fictional AI companion · demo</p></div><button class="chat-profile" type="button" data-show-chat-profile aria-controls="chat-profile-panel">View profile</button></header><p class="chat-notice" id="chat-notice">Scripted replies · no trial allowance used. Messages stay in this open page only.</p><div class="chat-log" id="chat-log" role="log" aria-label="Messages with ${c.shortName}" aria-live="polite" aria-relevant="additions" tabindex="0"></div><div class="chat-starters" aria-label="Conversation starters">${prompts.map((prompt,index) => `<button type="button" data-chat-prompt="${index}">${prompt}</button>`).join('')}</div><p class="chat-status" id="chat-status" role="status"></p><form id="chat-form" class="chat-composer"><label for="chat-message">Message ${c.shortName}</label><div class="chat-input-row"><textarea id="chat-message" rows="2" maxlength="1000" placeholder="Say something…" aria-describedby="chat-keyboard chat-notice"></textarea><button class="button button-primary" id="chat-send" type="submit">Send</button></div><div class="chat-tools"><small id="chat-keyboard">Enter to send · Shift + Enter for a new line</small>${hasVoice ? '<button type="button" data-chat-voice aria-pressed="false">Play voice sample</button>' : '<small>Voice sample coming soon</small>'}</div><p class="chat-audio-status" role="status"></p></form></section><div class="chat-profile-slot"></div><dialog class="chat-profile-dialog" aria-labelledby="chat-profile-title"></dialog></div>`;
     mountProfile(c);
     const input = host.querySelector('#chat-message');

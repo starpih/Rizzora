@@ -151,82 +151,6 @@ function initScrollParallax() {
 }
 initScrollParallax();
 
-function initHeroVoices() {
-  const buttons = document.querySelectorAll("[data-hero-voice]");
-  const audio = new Audio();
-  audio.preload = "none";
-  let activeButton = null;
-  let interaction = null;
-  let revision = 0;
-
-  function stop() {
-    revision += 1;
-    audio.pause();
-    if (activeButton) {
-      activeButton.classList.remove("is-playing");
-      activeButton.setAttribute("aria-pressed", "false");
-      activeButton.setAttribute("aria-label", `Play ${activeButton.dataset.voiceName}'s voice`);
-    }
-    activeButton = null;
-    interaction = null;
-  }
-  async function play(button, fromClick = false) {
-    document.querySelector("#hero-video")?.pause();
-    stopFeaturedPreview();
-    if (activeButton === button && !audio.paused) {
-      if (fromClick && interaction === "click") stop();
-      else if (fromClick) interaction = "click";
-      return;
-    }
-    stop();
-    activeButton = button;
-    interaction = fromClick ? "click" : "hover";
-    const request = revision;
-    audio.src = `assets/hero-companions/${button.dataset.heroVoice}.mp3`;
-    try {
-      // Call play directly in the click handler to retain browser user activation.
-      await audio.play();
-      if (request !== revision) return;
-      button.classList.add("is-playing");
-      button.setAttribute("aria-pressed", "true");
-      button.setAttribute("aria-label", `Stop ${button.dataset.voiceName}'s voice`);
-    } catch (error) {
-      if (request !== revision) return;
-      stop();
-      button.setAttribute("aria-label", error.name === "NotAllowedError"
-        ? `Click to hear ${button.dataset.voiceName}` : "Voice unavailable. Try again.");
-    }
-  }
-  buttons.forEach((button) => {
-    button.addEventListener("pointerenter", (event) => {
-      if (event.pointerType === "mouse") play(button);
-    });
-    button.addEventListener("pointerleave", (event) => {
-      if (event.pointerType === "mouse" && activeButton === button) stop();
-    });
-    button.addEventListener("click", () => play(button, true));
-    button.addEventListener("blur", () => { if (activeButton === button) stop(); });
-    button.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") stop();
-    });
-  });
-  audio.addEventListener("ended", stop);
-  audio.addEventListener("error", () => {
-    const button = activeButton;
-    stop();
-    if (button) button.setAttribute("aria-label", "Voice unavailable. Try again.");
-  });
-  window.addEventListener("hashchange", stop);
-  window.addEventListener("pagehide", stop);
-  document.addEventListener("visibilitychange", () => { if (document.hidden) stop(); });
-  if ("IntersectionObserver" in window) {
-    const observer = new IntersectionObserver(([entry]) => { if (!entry.isIntersecting) stop(); });
-    observer.observe(document.querySelector("#hero-voice-selector"));
-  }
-  return stop;
-}
-const stopHeroVoice = initHeroVoices();
-
 function initFeaturedPreviews() {
   const cards = [...document.querySelectorAll("[data-character-preview]")];
   let active = null;
@@ -258,7 +182,6 @@ function initFeaturedPreviews() {
     document.querySelector("#hero-video")?.pause();
     if (active === card) return;
     stop();
-    stopHeroVoice();
     active = card;
     const request = revision;
     const video = card.querySelector("video");
@@ -341,7 +264,6 @@ const stopFeaturedPreview = initFeaturedPreviews();
 
 function showDialog(markup, options = {}) {
   document.querySelector("#hero-video")?.pause();
-  stopHeroVoice();
   stopFeaturedPreview();
   closeMenu();
   if (!options.auth) portalAuth.close();
