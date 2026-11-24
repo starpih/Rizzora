@@ -114,7 +114,7 @@
     extra.innerHTML = `${heading("DEMO ACCOUNT", "Your Rizzora.")}<div class="ip-account-grid"><section><h2>Membership</h2><p>${membership ? `VIP · ${cycles[membership.cycle].label}` : "Free account"}</p><p class="ip-disclosure">${membership ? (membership.renewal ? "Demo renewal enabled. No automatic payment is scheduled." : "Demo renewal disabled. No payment is scheduled.") : "No active VIP subscription."}</p><a class="text-link" href="#membership">${membership ? "Change plan" : "Explore VIP"}${image("arrow")}</a>${membership ? '<button class="text-link" type="button" data-renewal>' + (membership.renewal ? "Turn off demo renewal" : "Enable demo renewal") + '</button>' : ""}</section><section><h2>Your characters</h2><p>${favorites.size} saved</p><div class="ip-saved-list">${characters.filter((c) => favorites.has(c.id)).map((c) => `<a href="#character/${c.id}">${c.name}${image("arrow")}</a>`).join("") || '<a href="#discover">Explore the characters</a>'}</div></section></div><section class="ip-order-history"><h2>Payment history</h2><p>${membership ? `Demo order · Rizzora VIP · ${cycles[membership.cycle].label} · No charge` : "No payments."}</p></section><button class="text-link" type="button" data-signout>Sign out of demo</button>`;
   }
   function stopMedia() { document.querySelectorAll("#ip-view video").forEach((v) => v.pause()); }
-  function route() {
+  function route({ initialLoad = false } = {}) {
     // A history/navigation change cancels the old dialog's intended destination.
     if (dialog.open) {
       pendingChat = false; resumeCheckout = false; returnFocus = null;
@@ -146,7 +146,10 @@
     else document.title = "Rizzora | Characters. Stories. Connection.";
     closeMenu();
     const focusTarget = localProfileAnchor ? document.getElementById(hash) : isHome ? document.querySelector(".hero h1") : hash === "discover" ? document.querySelector("#discover-title") : extra.querySelector("h1");
-    if (focusTarget) { focusTarget.setAttribute("tabindex", "-1"); focusTarget.focus({ preventScroll: true }); }
+    if (focusTarget && (!initialLoad || localProfileAnchor)) {
+      focusTarget.setAttribute("tabindex", "-1");
+      focusTarget.focus({ preventScroll: true });
+    }
     if (localProfileAnchor || (isHome && hash && hash !== "home")) document.getElementById(hash)?.scrollIntoView();
     else window.scrollTo({ top: 0, behavior: "instant" });
     window.RizzoraHero?.sync();
@@ -178,5 +181,5 @@
     if (event.target.id === "payment-form") { event.preventDefault(); if (!signedIn || !event.target.checkValidity()) return; membership = { cycle, renewal: true }; checkoutState = "success"; checkout(); }
   });
   recommendations();
-  route();
+  route({ initialLoad: true });
 })();

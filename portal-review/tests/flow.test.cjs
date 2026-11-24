@@ -471,3 +471,19 @@ test('profile clip, full portrait and collapsible details work without disturbin
     assert.deepEqual(errors, []);
   } finally { await browser.close(); }
 });
+
+test('refreshing Discover leaves the title unfocused and Tab reaches the skip link', async () => {
+  const browser = await launch();
+  try {
+    const page = await browser.newPage();
+    await page.goto(base + '#discover');
+    await page.reload();
+    const title = page.locator('#discover-title');
+    await title.waitFor();
+    assert.equal(await title.evaluate(node => node === document.activeElement), false);
+    await page.keyboard.press('Tab');
+    assert(await page.locator('.skip-link').evaluate(node => node.matches(':focus-visible')));
+  } finally {
+    await browser.close();
+  }
+});
