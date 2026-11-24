@@ -40,7 +40,24 @@
   function profile(id) {
     const c = byId(id);
     if (!c) { extra.innerHTML = `${heading("RIZZORA", "Character not found.")}<a class="text-link" href="#discover">Back to Discover${image("arrow")}</a>`; return; }
-    extra.innerHTML = `<a class="ip-back" href="#discover">${image("arrow")}Discover</a><div class="ip-profile"><div class="ip-profile-photo"><img src="${c.image}" alt="${c.name}, a virtual AI character"></div><div>${heading("THE RIZZORA CHARACTERS", c.name, c.summary)}<p class="ip-meta">${c.nationality} · ${c.profession}</p><div class="companion-traits">${[...c.traits, ...c.interests].map((t) => `<span>${t}</span>`).join("")}</div><div class="ip-actions"><button class="button button-primary" type="button" data-chat="${c.id}">Say hello${image("message")}</button><button class="icon-button ip-save" type="button" data-save="${c.id}" aria-label="${favorites.has(c.id) ? "Unsave" : "Save"} ${c.shortName}" title="${favorites.has(c.id) ? "Unsave" : "Save"} character" aria-pressed="${favorites.has(c.id)}">${image("heart")}</button></div><nav class="ip-tabs" aria-label="Character sections"><a href="#story-${c.id}">Story</a><a href="#moments-${c.id}">Moments</a></nav><section id="story-${c.id}"><h2>Meet ${c.shortName}.</h2><p class="ip-story">${c.summary} His world brings together ${c.interests.join(" and ").toLowerCase()} and a ${c.traits.join(", ").toLowerCase()} personality.</p><p class="ip-disclosure">A fictional AI character. Profile copy is a creative preview.</p></section></div></div><section class="ip-moments" id="moments-${c.id}"><div class="section-heading"><h2>A moment with ${c.shortName}.</h2><span class="eyebrow">FEATURED CLIP</span></div><video controls playsinline preload="none" poster="${c.image}" src="${c.id === "chris" ? "assets/hero-chris-v1.mp4" : featuredVideos[c.id]}"></video></section>`;
+    const meta = [c.nationality, c.profession].filter(Boolean).join(" · ");
+    const scene = document.querySelector(`[data-hero-character="${c.id}"]`);
+    const story = scene?.dataset.story || (c.id === "chris" ? "The song you sent is still playing when you arrive. Chris moves his sweater off the sofa. “I saved you the good spot.”" : c.summary);
+    const clip = c.id === "chris" ? "assets/hero-chris-v1.mp4" : featuredVideos[c.id];
+    const saved = favorites.has(c.id);
+    extra.innerHTML = `<nav class="ip-profile-breadcrumbs" aria-label="Profile navigation"><a class="ip-back" href="#home">${image("arrow")}Home</a><a class="ip-back" href="#discover">Discover characters</a></nav>
+      <div class="ip-profile"><div class="ip-profile-photo"><img src="${c.image}" alt="${c.name}, a virtual AI character"></div><div>
+        ${heading("THE RIZZORA CHARACTERS", c.name, c.summary)}
+        ${meta ? `<p class="ip-meta">${meta}</p>` : ""}
+        <div class="companion-traits">${[...c.traits, ...c.interests].map((t) => `<span>${t}</span>`).join("")}</div>
+        <div class="ip-actions"><button class="button button-primary" type="button" data-chat="${c.id}">Say hello${image("message")}</button><button class="icon-button ip-save" type="button" data-save="${c.id}" aria-label="${saved ? "Unsave" : "Save"} ${c.shortName}" title="${saved ? "Unsave" : "Save"} character" aria-pressed="${saved}">${image("heart")}</button></div>
+        <nav class="ip-tabs" aria-label="Character sections"><button type="button" data-profile-section="story-${c.id}" aria-controls="story-${c.id}">Story</button><button type="button" data-profile-section="moments-${c.id}" aria-controls="moments-${c.id}">Moments</button></nav>
+        <section id="story-${c.id}" class="ip-profile-section" tabindex="-1" aria-labelledby="story-title-${c.id}"><h2 id="story-title-${c.id}">Meet ${c.shortName}.</h2><p class="ip-story">${story}</p><p class="ip-disclosure">A fictional AI character. Profile copy is a creative preview.</p></section>
+      </div></div>
+      <section class="ip-moments ip-profile-section" id="moments-${c.id}" tabindex="-1" aria-labelledby="moments-title-${c.id}"><div class="section-heading"><h2 id="moments-title-${c.id}">A moment with ${c.shortName}.</h2><span class="eyebrow">${clip ? "FEATURED CLIP" : "A QUIET MOMENT"}</span></div>
+        ${clip ? `<video controls playsinline preload="none" poster="${c.image}" src="${clip}" aria-label="A moment with ${c.shortName}"></video>` : `<figure class="ip-profile-still"><img src="${scene?.getAttribute("src") || c.image}" alt="Hayes reading in a softly lit bookshop" loading="lazy"><figcaption>${story}</figcaption></figure>`}
+        <button class="button button-primary ip-moment-hello" type="button" data-chat="${c.id}">Say hello to ${c.shortName}${image("message")}</button>
+      </section>`;
   }
   function membershipPage() {
     extra.innerHTML = `${heading("RIZZORA MEMBERSHIP", "One VIP. Your kind of connection.", "Choose the billing rhythm that works for you.")}<div class="ip-membership-layout"><section><h2>Rizzora VIP</h2>${benefits}<p class="ip-disclosure">Future short dramas and member videos are not included in the current offer. Prices and renewal terms are pending approval.</p></section><form id="plan-form"><fieldset class="ip-plans"><legend>Billing cycle</legend>${Object.entries(cycles).map(([id, c]) => `<label class="ip-plan"><input type="radio" name="cycle" value="${id}" ${id === cycle ? "checked" : ""}><span><strong>${c.label}</strong><small>Billed every ${c.period}</small></span><span class="ip-price">Price to be confirmed</span></label>`).join("")}</fieldset><p class="ip-disclosure">Payment preview · no money is charged.</p><button class="button button-primary" type="submit">Continue${image("arrow")}</button></form></div>`;
@@ -64,42 +81,46 @@
   }
   function stopMedia() { document.querySelectorAll("#ip-view video").forEach((v) => v.pause()); }
   function route() {
+    // A history/navigation change cancels the old dialog's intended destination.
+    if (dialog.open) {
+      pendingChat = false; resumeCheckout = false; returnFocus = null;
+      portalAuth.close(); closeDialog();
+    }
     stopMedia();
     stopHeroVoice();
     stopFeaturedPreview();
+    window.RizzoraChat?.leave();
     const hash = location.hash.slice(1);
-    const isHome = !["discover", "membership", "checkout", "account"].includes(hash) && !hash.startsWith("character/") && !hash.startsWith("story-") && !hash.startsWith("moments-");
     const localProfileAnchor = hash.startsWith("story-") || hash.startsWith("moments-");
-    if (localProfileAnchor) {
-      if (!document.getElementById(hash)) {
-        profile(hash.replace(/^(story|moments)-/, ""));
-        document.querySelector("#home-view").hidden = true;
-        document.querySelector("#discover-view").hidden = true;
-        extra.hidden = false;
-        document.body.dataset.view = "ip";
-      }
-      window.RizzoraHero?.sync();
-      document.getElementById(hash)?.scrollIntoView(); return;
-    }
+    const isChat = hash === "chat" || hash.startsWith("chat/");
+    const isHome = !isChat && !["discover", "membership", "checkout", "account"].includes(hash) && !hash.startsWith("character/") && !localProfileAnchor;
     document.querySelector("#home-view").hidden = !isHome;
     document.querySelector("#discover-view").hidden = hash !== "discover";
     extra.hidden = isHome || hash === "discover";
-    document.body.dataset.view = isHome ? "home" : hash === "discover" ? "discover" : "ip";
-    document.querySelectorAll("[data-nav]").forEach((a) => { if (a.dataset.nav === (isHome ? "home" : hash)) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
-    if (hash.startsWith("character/")) { const id = hash.split("/")[1]; profile(id); document.title = `${byId(id)?.name || "Character"} | Rizzora`; }
+    document.body.dataset.view = isHome ? "home" : hash === "discover" ? "discover" : isChat ? "chat" : "ip";
+    document.querySelectorAll("[data-nav]").forEach((a) => { if (a.dataset.nav === (isHome ? "home" : isChat ? "chat" : hash)) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+    if (hash.startsWith("character/") || localProfileAnchor) {
+      const id = localProfileAnchor ? hash.replace(/^(story|moments)-/, "") : hash.split("/")[1];
+      profile(id);
+      if (byId(id)) selectedCharacter = byId(id);
+      document.title = `${byId(id)?.name || "Character"} | Rizzora`;
+    }
+    else if (isChat) window.RizzoraChat.render(extra, hash.split("/")[1]);
     else if (hash === "membership") { membershipPage(); document.title = "VIP Membership | Rizzora"; }
     else if (hash === "checkout") { checkout(); document.title = "Checkout Preview | Rizzora"; }
     else if (hash === "account") { account(); document.title = "My Account | Rizzora"; }
     else if (hash === "discover") { recommendations(); document.title = "Discover Characters | Rizzora"; }
     else document.title = "Rizzora | Characters. Stories. Connection.";
     closeMenu();
-    if (isHome && hash && hash !== "home") document.getElementById(hash)?.scrollIntoView();
+    const focusTarget = localProfileAnchor ? document.getElementById(hash) : isHome ? document.querySelector(".hero h1") : hash === "discover" ? document.querySelector("#discover-title") : extra.querySelector("h1");
+    if (focusTarget) { focusTarget.setAttribute("tabindex", "-1"); focusTarget.focus({ preventScroll: true }); }
+    if (localProfileAnchor || (isHome && hash && hash !== "home")) document.getElementById(hash)?.scrollIntoView();
     else window.scrollTo({ top: 0, behavior: "instant" });
     window.RizzoraHero?.sync();
   }
   window.RizzoraIP = {
     route,
-    afterLogin() { if (!resumeCheckout) return false; resumeCheckout = false; pendingChat = false; closeDialog(); location.hash = "checkout"; route(); return true; },
+    afterLogin() { if (!resumeCheckout) return false; resumeCheckout = false; pendingChat = false; closeDialog(); navigateTo("checkout"); return true; },
     rememberChat(id) { if (!chats.includes(id)) chats.unshift(id); },
   };
   const voiceSlot = document.querySelector("#voice-selector-slot");
@@ -115,17 +136,21 @@
   document.addEventListener("click", (event) => {
     const button = event.target.closest("button, a");
     if (!button) return;
+    if (button.dataset.profileSection) {
+      const section = document.getElementById(button.dataset.profileSection);
+      section?.focus({ preventScroll: true }); section?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" });
+    }
     if (button.dataset.profile) location.hash = `character/${button.dataset.profile}`;
-    if (button.dataset.save) { const id = button.dataset.save; if (!byId(id)) return; if (favorites.has(id)) favorites.delete(id); else favorites.add(id); saveFavorites(); profile(id); }
+    if (button.dataset.save) { const id = button.dataset.save; if (!byId(id)) return; if (favorites.has(id)) favorites.delete(id); else favorites.add(id); saveFavorites(); button.setAttribute("aria-pressed", String(favorites.has(id))); button.setAttribute("aria-label", `${favorites.has(id) ? "Unsave" : "Save"} ${byId(id).shortName}`); button.title = `${favorites.has(id) ? "Unsave" : "Save"} character`; }
     if (button.hasAttribute("data-checkout-login")) { resumeCheckout = true; showLogin(); }
     if (button.hasAttribute("data-payment-retry")) { checkoutState = "review"; checkout(); }
     if (button.hasAttribute("data-payment-fail")) { checkoutState = "failed"; checkout(); }
     if (button.hasAttribute("data-payment-cancel")) { checkoutState = "cancelled"; checkout(); }
     if (button.hasAttribute("data-renewal") && membership) { membership.renewal = !membership.renewal; account(); }
-    if (button.hasAttribute("data-signout")) { membership = null; chats.length = 0; resumeCheckout = false; if (location.hash === "#account") account(); }
+    if (button.hasAttribute("data-signout")) { membership = null; chats.length = 0; resumeCheckout = false; window.RizzoraChat?.clear(); if (location.hash === "#account") account(); }
   });
   document.addEventListener("submit", (event) => {
-    if (event.target.id === "plan-form") { event.preventDefault(); cycle = new FormData(event.target).get("cycle"); if (!cycles[cycle]) cycle = "monthly"; checkoutState = "review"; location.hash = "checkout"; route(); }
+    if (event.target.id === "plan-form") { event.preventDefault(); cycle = new FormData(event.target).get("cycle"); if (!cycles[cycle]) cycle = "monthly"; checkoutState = "review"; navigateTo("checkout"); }
     if (event.target.id === "payment-form") { event.preventDefault(); if (!signedIn || !event.target.checkValidity()) return; membership = { cycle, renewal: true }; checkoutState = "success"; checkout(); }
   });
   recommendations();

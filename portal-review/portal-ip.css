@@ -91,3 +91,15 @@ body[data-view="home"] .site-header { background: rgb(255 255 255 / 5%); -webkit
 }
 @media(max-width:350px) { .hero-picker { gap: 5px; } }
 @media(prefers-reduced-motion:reduce) { .hero-art { transform: none; } }
+
+/* Profile navigation stays within the character page. */
+.ip-profile-breadcrumbs { display: flex; flex-wrap: wrap; gap: 12px 28px; margin-bottom: 24px; }
+.ip-profile-breadcrumbs .ip-back { min-height: 44px; margin: 0; }
+.ip-tabs button { min-height: 44px; padding: 8px 0; border: 0; background: transparent; color: var(--text-secondary); font: inherit; cursor: pointer; }
+.ip-tabs button:hover { color: var(--text-primary); }
+.ip-profile-section { scroll-margin-top: 24px; }
+.ip-profile-section:focus-visible, .ip-tabs button:focus-visible { outline: 2px solid var(--brand-primary); outline-offset: 5px; }
+.ip-profile-still { max-width: 640px; margin: 0; }
+.ip-profile-still img { display: block; width: 100%; height: auto; }
+.ip-profile-still figcaption { margin-top: 20px; color: var(--text-secondary); font: 20px/1.6 var(--font-display); }
+.ip-moment-hello { margin-top: 28px; }

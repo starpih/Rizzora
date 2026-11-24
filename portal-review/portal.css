@@ -274,48 +274,27 @@ dialog .button { margin-top: 24px; }
 @media(prefers-reduced-motion:reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; } .hero-art, .scene-photo { transform: none; will-change: auto; } .hero-avatar { --voice-avatar-scale: 1; } .hero-avatar, .hero-avatar:hover, .hero-avatar.is-playing, .hero-avatar:focus-visible { transform: none; } .hero-avatar::before { animation: none !important; } .hero-avatar:hover::before, .hero-avatar:focus-visible::before, .hero-avatar.is-playing::before { opacity: .75; } }
 @media(prefers-reduced-motion:reduce) { .hero-cta, .hero-cta:is(:hover, :focus-visible, :active) { transform: none; } .hero-cta::before { animation: none !important; } .hero-cta:is(:hover, :focus-visible)::before { opacity: .5; } }
 
-/* Homepage sample conversation; deliberately independent of live chat state. */
-.chat-preview-stage { position: relative; isolation: isolate; overflow: hidden; padding: 32px; }
-.chat-preview-stage::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: linear-gradient(color-mix(in srgb, var(--bg-page) 30%, transparent), color-mix(in srgb, var(--bg-page) 30%, transparent)), url("assets/chris-living-room-night-v1.png") center / cover;
-}
-.chat-preview {
-  max-width: 920px;
-  margin-inline: auto;
-  padding: 32px;
-  border-radius: 20px;
-  background-color: rgb(from var(--bg-surface) r g b / 0.85);
-  -webkit-backdrop-filter: blur(25px);
-  backdrop-filter: blur(25px);
-}
-.chat-preview-heading, .chat-preview-footer { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-.chat-preview-tag { color: var(--accent-gold); font-size: 12px; }
-.chat-preview-intro { margin-top: 16px; color: var(--text-secondary); line-height: 1.6; }
-.chat-preview-options { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
-.chat-preview-options button { min-height: 44px; padding: 12px 17px; border: 0; border-radius: 999px; background: var(--bg-raised); font-size: 14px; text-align: left; }
-.chat-preview-options button:hover { background: color-mix(in srgb, var(--brand-primary) 12%, var(--bg-raised)); }
-.chat-preview-options button[aria-pressed="true"] { background: color-mix(in srgb, var(--brand-primary) 26%, var(--bg-surface)); color: var(--text-primary); }
-.chat-preview-options button:focus-visible { outline: 2px solid var(--brand-primary); outline-offset: 4px; }
-.chat-preview-conversation { display: flex; flex-direction: column; justify-content: center; gap: 16px; min-height: 240px; padding-block: 28px; }
-.chat-preview-placeholder { color: var(--text-secondary); text-align: center; font: 24px/1.5 var(--font-display); }
-.chat-preview-bubble { max-width: 80%; align-self: flex-start; padding: 16px 20px; border-radius: 16px 16px 16px 4px; background: var(--bg-raised); font-size: 15px; line-height: 1.6; }
-.chat-preview-bubble-user { align-self: flex-end; border-radius: 16px 16px 4px 16px; background: color-mix(in srgb, var(--brand-primary) 12%, var(--bg-surface)); }
-.chat-preview-speaker { display: block; margin-bottom: 6px; color: var(--text-secondary); font-size: 11px; }
-.chat-preview-footer { padding-top: 22px; }
-.chat-preview-footer p { max-width: 47ch; color: var(--text-secondary); font-size: 12px; line-height: 1.7; }
-.chat-preview-footer .button { flex-shrink: 0; }
-@media (max-width: 600px) {
-  .chat-preview-stage { padding: 24px 0; }
-  .chat-preview-stage > .section-heading { padding-inline: 18px; }
-  .chat-preview-stage::before { background-position: 22% center; }
-  .chat-preview { padding: 22px 18px; }
-  .chat-preview-options { flex-direction: column; align-items: stretch; }
-  .chat-preview-bubble { max-width: 95%; }
-  .chat-preview-footer { flex-direction: column; align-items: stretch; }
-  .chat-preview-footer .button { justify-content: center; }
+/* Character moments stay independent of the Hero slideshow timer. */
+.world-preview { position: relative; isolation: isolate; overflow: hidden; min-height: 600px; background: var(--bg-surface); }
+.world-scene { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: 30% center; }
+.world-preview::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, transparent 10%, #18121f55 35%, #18121fee 63%, var(--bg-page)); }
+.world-content { width: 55%; margin-left: auto; padding: 48px 40px; }
+.world-content h2 { margin-top: 12px; font-size: clamp(30px, 3vw, 44px); }
+.world-name { margin-top: 24px; font: 40px/1.2 var(--font-display); color: var(--accent-gold); }
+.world-intro { margin-top: 12px; color: var(--text-secondary); font-size: 15px; line-height: 1.6; max-width: 38ch; }
+.world-interests { display: flex; flex-wrap: wrap; gap: 8px 12px; margin: 24px 0 16px; }
+.world-interests button { border: 0; background: transparent; border-radius: 8px; padding: 10px 12px; min-height: 44px; color: var(--text-primary); font-size: 16px; }
+.world-interests button:hover { background: var(--bg-raised); }
+.world-interests button[aria-pressed="true"] { color: var(--voice-halo-highlight); background: var(--tag-brand-bg); }
+.world-interests button:focus-visible { outline: 2px solid var(--brand-primary); outline-offset: 2px; }
+.world-story { min-height: 116px; margin-bottom: 24px; padding: 8px 0; font: 20px/1.6 var(--font-display); }
+.world-story strong { display: block; font: 12px/1.5 var(--font-body); color: var(--text-secondary); margin-bottom: 8px; }
+.world-note { margin-top: 18px; font-size: 12px; line-height: 1.6; color: var(--text-secondary); }
+@media (max-width: 760px) {
+  .world-preview { min-height: 0; }
+  .world-scene { height: 340px; object-position: center 24%; }
+  .world-preview::before { background: linear-gradient(180deg, transparent 160px, var(--bg-page) 335px); }
+  .world-content { width: 100%; padding: 300px 20px 28px; }
+  .world-name { margin-top: 20px; }
+  .world-story { min-height: 154px; }
 }

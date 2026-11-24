@@ -9,10 +9,13 @@
   <link rel="stylesheet" href="portal.css?v=chris-living-room-20261119">
   <link rel="stylesheet" href="portal-auth.css?v=20261119">
   <link rel="stylesheet" href="portal-ip.css?v=hero-spacing-20261120">
+  <link rel="stylesheet" href="portal-chat.css">
   <script src="characters.js?v=20261119" defer></script>
   <script src="portal-auth.js?v=20261119" defer></script>
   <script src="portal.js?v=auth-glass-20261119" defer></script>
+  <script src="portal-world.js" defer></script>
   <script src="portal-hero.js?v=hero-stories-20261120" defer></script>
+  <script src="portal-chat.js" defer></script>
   <script src="portal-ip.js?v=hero-stills-20261120" defer></script>
 </head>
 <body>
@@ -22,7 +25,7 @@
     <nav id="site-nav" aria-label="Main navigation">
       <a href="#home" data-nav="home" aria-current="page">Home</a>
       <a href="#discover" data-nav="discover">Discover</a>
-      <button class="nav-chat" type="button" data-open="chat" id="nav-chat"><span>Chat</span><span class="nav-unread" id="chat-unread" aria-hidden="true" hidden></span></button>
+      <button class="nav-chat" type="button" data-open="chat" id="nav-chat" data-nav="chat"><span>Chat</span><span class="nav-unread" id="chat-unread" aria-hidden="true" hidden></span></button>
       <a href="#membership" data-nav="membership">Membership</a>
     </nav>
     <div class="header-actions">
@@ -82,25 +85,17 @@
       </section>
 
       <section id="companions" class="companions section-wrap" aria-labelledby="companions-title">
-        <div class="chat-preview-stage">
-          <div class="section-heading">
-            <div><p class="eyebrow">A LITTLE SPACE FOR YOU</p><h2 id="companions-title">What would you like to talk about today?</h2></div>
-          </div>
-          <div class="chat-preview" aria-label="Sample chat preview">
-            <div class="chat-preview-heading"><span class="eyebrow">SAMPLE CONVERSATION</span><span class="chat-preview-tag">Just a preview</span></div>
-            <p class="chat-preview-intro" id="chat-preview-instructions">Pick a starting point. See how a conversation could feel.</p>
-            <div class="chat-preview-options" role="group" aria-label="Choose a sample conversation" aria-describedby="chat-preview-instructions">
-              <button type="button" data-chat-preview="tired" aria-pressed="false" aria-controls="chat-preview-conversation">I'm a little tired today</button>
-              <button type="button" data-chat-preview="happy" aria-pressed="false" aria-controls="chat-preview-conversation">I have something happy to share</button>
-              <button type="button" data-chat-preview="casual" aria-pressed="false" aria-controls="chat-preview-conversation">I just feel like chatting</button>
-            </div>
-            <div id="chat-preview-conversation" class="chat-preview-conversation" role="status" aria-live="polite" aria-atomic="true">
-              <p class="chat-preview-placeholder">You don't need the perfect words to begin.</p>
-            </div>
-            <div class="chat-preview-footer">
-              <p>Sample only. No live AI connection. These exchanges aren't saved and won't use your free messages.</p>
-              <button class="button button-primary" type="button" data-open="chat">Start chatting <img class="icon" src="assets/arrow.svg" alt=""></button>
-            </div>
+        <div class="world-preview" data-world="chris">
+          <img class="world-scene" src="assets/hero-stills-4x3-v1/01-chris-home.webp" alt="" width="1448" height="1086">
+          <div class="world-content">
+            <p class="eyebrow">A LITTLE CLOSER</p>
+            <h2 id="companions-title">Step into his world.</h2>
+            <p class="world-name" id="world-name">Chris</p>
+            <p class="world-intro">A few things he comes back to. Pick one to linger a little.</p>
+            <div class="world-interests" role="group" aria-label="Explore Chris's interests"></div>
+            <div class="world-story" id="world-story" role="status" aria-live="polite" aria-atomic="true"><p>Choose a word for a small glimpse of his day.</p></div>
+            <a class="button button-primary world-cta" href="#character/chris">Meet Chris</a>
+            <p class="world-note">Imagined moments with a fictional AI character.</p>
           </div>
         </div>
         <div id="voice-selector-slot"></div>

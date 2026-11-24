@@ -4,7 +4,7 @@ window.createRizzoraPortalAuth = ({ content, show, onAuthenticated, service = wi
     async requestEmailCode() { return { expiresInSeconds: 300, resendAfterSeconds: 30 }; },
     async verifyEmailCode(email, code) {
       if (code !== "123456") throw new Error("That code doesn't match. Try again.");
-      return { name: "Explorer", unreadCount: 3, isDemo: true };
+      return { name: "Explorer", unreadCount: 0, isDemo: true };
     },
   };
   let active = false;
@@ -89,7 +89,7 @@ window.createRizzoraPortalAuth = ({ content, show, onAuthenticated, service = wi
         <button class="auth-provider" type="button" data-auth="google">${icon("google")}<span>Continue with Google</span>${icon("external")}</button>
         <button class="auth-provider" type="button" data-auth="facebook">${icon("facebook")}<span>Continue with Facebook</span>${icon("external")}</button>
         </div><div class="auth-divider"><span>or</span></div>
-        <button class="auth-provider" type="button" data-auth="email">${icon("mail")}<span>Continue with email</span>${icon("arrow")}</button>`;
+        <button class="auth-provider" type="button" data-auth="email">${icon("mail")}<span>Continue with email</span>${icon("arrow")}</button>${isDemo ? '<button class="button button-primary auth-demo-start" type="button" data-auth-demo>Try the demo · no sign-up</button>' : ""}`;
     } else if (step === "email") {
       body = `<form class="auth-form" id="auth-email-form" novalidate><label for="auth-email">Email address</label><div class="auth-input">${icon("mail")}<input id="auth-email" type="email" name="email" autocomplete="email" maxlength="254" placeholder="you@example.com" required aria-describedby="auth-error"></div><button class="auth-submit" type="submit"><span>Send code</span>${icon("arrow")}</button></form>`;
     } else {
@@ -198,13 +198,14 @@ window.createRizzoraPortalAuth = ({ content, show, onAuthenticated, service = wi
     if (!isDemo || !active || !pending || Date.now() >= pending.expiresAt || event.source !== pending.popup || event.origin !== pending.origin) return;
     const data = event.data;
     if (!data || data.type !== "rizzora:auth-preview" || data.attempt !== pending.attempt || data.provider !== pending.provider) return;
-    if (data.result === "approved") complete({ name: "Explorer", unreadCount: 3, isDemo: true });
+    if (data.result === "approved") complete({ name: "Explorer", unreadCount: 0, isDemo: true });
     else if (data.result === "cancelled") cancelAuthorization("Authorization was cancelled.");
   });
   content.addEventListener("click", (event) => {
     if (!active) return;
     const target = event.target.closest("button");
     if (!target || target.disabled) return;
+    if (target.hasAttribute("data-auth-demo") && isDemo) { complete({ name: "Explorer", unreadCount: 0, isDemo: true }); return; }
     if (target.dataset.auth === "email") { step = "email"; error = ""; render(); }
     else if (target.dataset.auth) startProvider(target.dataset.auth);
     else if (target.hasAttribute("data-auth-back")) { step = step === "code" ? "email" : "methods"; error = ""; render(); }

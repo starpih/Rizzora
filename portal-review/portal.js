@@ -38,32 +38,6 @@ function characterCard(character, discovery = false) {
 const featuredCharacters = document.querySelector("#featured-characters");
 if (featuredCharacters) featuredCharacters.innerHTML = characters.map((c) => characterCard(c)).join("");
 
-function initChatPreview() {
-  const preview = document.querySelector(".chat-preview");
-  if (!preview) return;
-  const replies = {
-    tired: "Then you don't have to start from the beginning. Would you like to vent, or talk about something light first?",
-    happy: "I'd love to hear it. What happened? We can celebrate the little things, too.",
-    casual: "Of course. No big topic needed. What's one small thing that made you smile today?",
-  };
-  const conversation = preview.querySelector("#chat-preview-conversation");
-  const options = [...preview.querySelectorAll("[data-chat-preview]")];
-  options.forEach((button) => button.addEventListener("click", () => {
-    options.forEach((option) => option.setAttribute("aria-pressed", String(option === button)));
-    const messages = [["You", button.textContent], ["AI companion · sample", replies[button.dataset.chatPreview]]];
-    conversation.replaceChildren(...messages.map(([speaker, text], index) => {
-      const bubble = document.createElement("p");
-      bubble.className = `chat-preview-bubble${index === 0 ? " chat-preview-bubble-user" : ""}`;
-      const label = document.createElement("span");
-      label.className = "chat-preview-speaker";
-      label.textContent = speaker;
-      bubble.append(label, document.createTextNode(text));
-      return bubble;
-    }));
-  }));
-}
-initChatPreview();
-
 const filterFields = {
   nationality: (c) => [c.nationality],
   personality: (c) => c.traits,
@@ -73,7 +47,7 @@ const filterFields = {
 };
 for (const [key, getValues] of Object.entries(filterFields)) {
   const select = document.querySelector(`#filter-${key}`);
-  const values = [...new Set(characters.flatMap(getValues))].sort();
+  const values = [...new Set(characters.flatMap(getValues).filter(Boolean))].sort();
   values.forEach((value) => select.add(new Option(value, value)));
   select.addEventListener("change", renderDiscovery);
 }
@@ -108,6 +82,11 @@ menuButton.addEventListener("click", () => {
   menuButton.setAttribute("aria-expanded", String(expanded));
   menuButton.setAttribute("aria-label", expanded ? "Close menu" : "Open menu");
 });
+
+function navigateTo(hash) {
+  if (location.hash === `#${hash}`) route();
+  else location.hash = hash;
+}
 
 function route() {
   if (window.RizzoraIP) { window.RizzoraIP.route(); return; }
@@ -401,7 +380,8 @@ function showLogin() {
 }
 function finishDemoLogin(user = {}) {
   signedIn = true;
-  updateUnreadCount(user.unreadCount ?? 3);
+  returnFocus = null;
+  updateUnreadCount(0);
   document.querySelector(".login-button > img")?.setAttribute("hidden", "");
   if (!document.querySelector(".account-avatar")) {
     const avatar = document.createElement("span");
@@ -413,20 +393,22 @@ function finishDemoLogin(user = {}) {
   document.querySelector("#account-label").textContent = "My account";
   if (window.RizzoraIP?.afterLogin()) return;
   if (pendingChat) showChat();
-  else showAccount();
+  else { closeDialog(); showAccount(); }
 }
 function showAccount() {
-  if (window.RizzoraIP) { location.hash = "account"; window.RizzoraIP.route(); return; }
+  if (window.RizzoraIP) { navigateTo("account"); return; }
   showDialog(`<p class="eyebrow">DEMO ACCOUNT</p><h2 id="dialog-title">Hello, explorer.</h2><p>Your account gives you a place to return to your conversations.</p><p class="demo-label">This preview uses a temporary demo session. No personal information or purchase history is stored.</p><div class="dialog-stack"><button type="button" data-open="subscription">Explore VIP benefits</button><button type="button" data-open="chat">Open a demo conversation</button><button type="button" data-signout>Sign out of demo</button></div>`);
 }
 function showChat() {
-  window.RizzoraIP?.rememberChat(selectedCharacter.id);
+  if (!selectedCharacter) return;
   pendingChat = false;
   updateUnreadCount(0);
-  showDialog(`<p class="eyebrow">DEMO CONVERSATION</p><h2 id="dialog-title">${selectedCharacter.shortName}</h2><p class="demo-label">Illustrative local messages. No AI or media service is connected.</p><div class="demo-chat"><div class="demo-chat-log" role="log" aria-live="polite"><p>${selectedCharacter.greeting}</p></div><form id="demo-chat-form"><input aria-label="Message" placeholder="Say hello..." autocomplete="off" maxlength="500" required><button type="submit" aria-label="Send message">${icon("arrow")}</button></form></div>`);
+  closeDialog();
+  navigateTo(`chat/${selectedCharacter.id}`);
 }
+
 function showSubscription() {
-  if (window.RizzoraIP) { location.hash = "membership"; window.RizzoraIP.route(); return; }
+  if (window.RizzoraIP) { navigateTo("membership"); return; }
   showDialog(`<p class="eyebrow">RIZZORA VIP</p><h2 id="dialog-title">More ways to connect.</h2><p>VIP unlocks photo messages, voice messages, and voice calls. All chats, including VIP interactions, use Stamina.</p><ul class="dialog-list"><li>60,000 Stamina issued every month on monthly, quarterly, or yearly billing.</li><li>Included monthly Stamina resets; unused monthly Stamina does not carry over.</li><li>Purchased extra Stamina is retained and is used after your included monthly Stamina.</li><li>You can purchase Stamina for text chat without a VIP subscription.</li></ul><p>New accounts receive 10 free messages a day for the first 3 days. From day 4, continuing requires a Stamina purchase or VIP.</p><p class="demo-label">Prices and VIP trial terms are still being finalized. No checkout or payment is available in this preview.</p>`);
 }
 
@@ -446,19 +428,19 @@ document.addEventListener("click", (event) => {
     document.querySelector("#character-search").value = characters.find((c) => c.id === target.dataset.discover).name;
     Object.keys(filterFields).forEach((key) => { document.querySelector(`#filter-${key}`).value = ""; });
     renderDiscovery();
-    location.hash = "discover";
-    route();
+    navigateTo("discover");
   }
   if (target.dataset.chat) {
     selectedCharacter = characters.find((c) => c.id === target.dataset.chat);
+    if (!selectedCharacter) return;
     pendingChat = !signedIn;
     if (signedIn) showChat(); else showLogin();
   }
   if (target.dataset.open === "login") showLogin();
   if (target.dataset.open === "subscription") showSubscription();
   if (target.dataset.open === "chat") {
-    pendingChat = !signedIn;
-    if (signedIn) showChat(); else showLogin();
+    closeMenu();
+    navigateTo("chat");
   }
   if (target.dataset.open === "safety") showSafety();
   if (target.dataset.legal) showSafety(target.dataset.legal);
@@ -475,20 +457,4 @@ document.addEventListener("click", (event) => {
     document.querySelector("#account-label").textContent = "Log in";
     closeDialog();
   }
-});
-document.addEventListener("submit", (event) => {
-  if (event.target.id !== "demo-chat-form") return;
-  event.preventDefault();
-  const input = event.target.querySelector("input");
-  const value = input.value.trim();
-  if (!value) return;
-  const log = dialog.querySelector(".demo-chat-log");
-  const userMessage = document.createElement("p");
-  userMessage.className = "demo-user";
-  userMessage.textContent = value;
-  const reply = document.createElement("p");
-  reply.textContent = "This is a preview of your conversation space. Your real conversation will begin when the service is connected.";
-  log.append(userMessage, reply);
-  input.value = "";
-  log.scrollTop = log.scrollHeight;
 });
