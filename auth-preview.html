@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Authorization Preview | Rizzora</title>
+  <link rel="stylesheet" href="portal.css?v=auth-glass-20261119">
+  <link rel="stylesheet" href="portal-auth.css?v=20261119">
+  <script src="auth-preview.js?v=20261119" defer></script>
+</head>
+<body class="auth-preview-page">
+  <main class="auth-preview-surface">
+    <img class="auth-brand" src="assets/logo.svg" alt="Rizzora" width="32" height="32">
+    <p class="eyebrow">AUTHORIZATION PREVIEW</p>
+    <h1 id="preview-title">Continue to Rizzora.</h1>
+    <p class="auth-subtitle" id="preview-description">Demo authorization only. No Google or Facebook account is connected.</p>
+    <div class="auth-preview-account"><span class="account-avatar" aria-hidden="true">E</span><div><strong>Explorer</strong><span>explorer@example.test</span></div></div>
+    <button class="auth-submit" id="approve-preview" type="button" disabled><span>Continue with demo account</span><img class="icon" src="assets/arrow.svg" alt=""></button>
+    <button class="auth-preview-cancel" id="cancel-preview" type="button">Cancel</button>
+    <p class="auth-demo-notice" id="preview-status" role="status">No credentials are requested or stored.</p>
+  </main>
+</body>
+</html>
